@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Proj4Me.Application\Proj4Me.Application.csproj" />
+    <ProjectReference Include="..\Proj4Me.Domain\Proj4Me.Domain.csproj" />
+    <ProjectReference Include="..\Proj4Me.Infra.CrossCuting.Bus\Proj4Me.Infra.CrossCuting.Bus.csproj" />
+    <ProjectReference Include="..\Proj4Me.Infra.Data\Proj4Me.Infra.Data.csproj" />
+  </ItemGroup>
+
+</Project>
