@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Proj4Me.Domain.Interfaces
+@inject IUser user
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -16,6 +19,8 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                @if (user.IsAuthenticated())
+                {
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -31,6 +36,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Perfil" asp-action="Index">Perfis</a>
                         </li>
                     </ul>
+                </div>
+                }
+                <div class="navbar-collapse collapse">
+           @*         <ul class="nav navbar-nav">
+                        <li><a asp-area="" asp-controller="Eventos" asp-action="Index">Próximos Eventos</a></li>
+                        @{
+                            if (user.IsAuthenticated())
+                            {
+                                <li><a asp-area="" asp-controller="Eventos" asp-action="MeusEventos">Meus Eventos</a></li>
+                            }
+                        }
+                    </ul>*@
+                    @await Html.PartialAsync("_LoginPartial")
                 </div>
             </div>
         </nav>

@@ -4,7 +4,7 @@ using Proj4Me.Domain.Core.Events;
 using System;
 using Proj4Me.Domain.Core.Notification;
 
-namespace Proj4Me.Infra.CrossCuting.Bus
+namespace Proj4Me.Infra.CrossCutting.Bus
 {
   /// <summary>
   ///  classe selada pra nao ser herdada por ninguem
@@ -16,7 +16,7 @@ namespace Proj4Me.Infra.CrossCuting.Bus
     //Define um mecanismo para recuperar um objeto de serviço, ou seja, um objeto que dá suporte personalizado a outros objetos.
     //Essa manobra é pra se ter acesso aqui ao container de injecao de dependencia sem ao menos conhece-la
     public static Func<IServiceProvider> ContainerAccessor { get; set; }// Metodo de acesso ao container de injecao de dependencia e ele é uma função porque passamos para o IServiceProvider essa funçao como segue abaixo
-    //Esse ContainerAccessor vai ser injetado diretamente no projeto aspnet no startup.cs. Pra isso adiciona o Proj4Me.Infra.CrossCuting.Bus na camda de apresentacao "Proj4Me.Web" e na camada "Proj4Me.Infra.CrossCuting.IoC" tambem incluir o Bus
+    //Esse ContainerAccessor vai ser injetado diretamente no projeto aspnet no startup.cs. Pra isso adiciona o Proj4Me.Infra.CrossCutting.Bus na camda de apresentacao "Proj4Me.Web" e na camada "Proj4Me.Infra.CrossCutting.IoC" tambem incluir o Bus
     //Em seguida no startup da Proj4Me.Web ativar o bus e ajustar as dependencias. (InMemoryBus.ContainerAccessor = () => accessor.HttpContext.RequestServices;)
     private static IServiceProvider Container => ContainerAccessor();
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32630.194
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Presentation", "1 - Presentation", "{9D5846A1-B010-4D6B-8970-F651624CE3CF}"
 EndProject
@@ -27,15 +27,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Application", "Proj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.1 - Data", "5.1 - Data", "{45E68D7E-AAAD-4AF9-9482-5FA02A9C585E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.2 - Crosscuting", "5.2 - Crosscuting", "{E6551035-A1B3-4817-A26E-82B654100A2B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.2 - Crosscutting", "5.2 - Crosscutting", "{E6551035-A1B3-4817-A26E-82B654100A2B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.CrossCuting.IoC", "Proj4Me.Infra.CrossCuting.IoC\Proj4Me.Infra.CrossCuting.IoC.csproj", "{5099399A-CD1A-45F4-92FD-0017BF616528}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.CrossCutting.IoC", "Proj4Me.Infra.CrossCutting.IoC\Proj4Me.Infra.CrossCutting.IoC.csproj", "{5099399A-CD1A-45F4-92FD-0017BF616528}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.CrossCuting.Bus", "Proj4Me.Infra.CrossCuting.Bus\Proj4Me.Infra.CrossCuting.Bus.csproj", "{7BE80B5F-CAA0-4F75-B1E5-09FA6920C1C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.CrossCutting.Bus", "Proj4Me.Infra.CrossCutting.Bus\Proj4Me.Infra.CrossCutting.Bus.csproj", "{7BE80B5F-CAA0-4F75-B1E5-09FA6920C1C9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.3 - Service", "5.3 - Service", "{EA20D90F-C16F-4C7B-A5F7-8E2ECEAC3C0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proj4Me.Infra.Service", "Proj4Me.Infra.Service\Proj4Me.Infra.Service.csproj", "{2E00A1CE-B730-46D4-AA68-23928120E7B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.Service", "Proj4Me.Infra.Service\Proj4Me.Infra.Service.csproj", "{2E00A1CE-B730-46D4-AA68-23928120E7B7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.CrossCutting.Identity", "Proj4Me.Infra.CrossCutting.Identity\Proj4Me.Infra.CrossCutting.Identity.csproj", "{772B1C50-1F49-4CF6-BD47-DE722A0D1A16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +81,10 @@ Global
 		{2E00A1CE-B730-46D4-AA68-23928120E7B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E00A1CE-B730-46D4-AA68-23928120E7B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E00A1CE-B730-46D4-AA68-23928120E7B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{772B1C50-1F49-4CF6-BD47-DE722A0D1A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{772B1C50-1F49-4CF6-BD47-DE722A0D1A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{772B1C50-1F49-4CF6-BD47-DE722A0D1A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{772B1C50-1F49-4CF6-BD47-DE722A0D1A16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +102,7 @@ Global
 		{7BE80B5F-CAA0-4F75-B1E5-09FA6920C1C9} = {E6551035-A1B3-4817-A26E-82B654100A2B}
 		{EA20D90F-C16F-4C7B-A5F7-8E2ECEAC3C0E} = {8B3BAA1E-7E19-420B-9C73-8D31101B82FD}
 		{2E00A1CE-B730-46D4-AA68-23928120E7B7} = {EA20D90F-C16F-4C7B-A5F7-8E2ECEAC3C0E}
+		{772B1C50-1F49-4CF6-BD47-DE722A0D1A16} = {E6551035-A1B3-4817-A26E-82B654100A2B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9BDAED4E-739C-4461-9C8C-5FA0DDDE40F8}
