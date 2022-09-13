@@ -13,7 +13,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Proj4Me.Application\Proj4Me.Application.csproj" />
     <ProjectReference Include="..\Proj4Me.Domain\Proj4Me.Domain.csproj" />
-    <ProjectReference Include="..\Proj4Me.Infra.CrossCuting.Bus\Proj4Me.Infra.CrossCuting.Bus.csproj" />
+    <ProjectReference Include="..\Proj4Me.Infra.CrossCutting.Bus\Proj4Me.Infra.CrossCutting.Bus.csproj" />
+    <ProjectReference Include="..\Proj4Me.Infra.CrossCutting.Identity\Proj4Me.Infra.CrossCutting.Identity.csproj" />
     <ProjectReference Include="..\Proj4Me.Infra.Data\Proj4Me.Infra.Data.csproj" />
   </ItemGroup>
 

@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Proj4Me.Web.Models;
-using System;
-using System.Collections.Generic;
+using Proj4Me.Infra.CrossCutting.Identity.Models;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace Proj4Me.Web.Controllers
 {

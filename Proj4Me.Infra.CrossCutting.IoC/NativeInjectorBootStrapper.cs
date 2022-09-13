@@ -12,7 +12,7 @@ using Proj4Me.Domain.ProjetosAreaServicos.Events;
 using Proj4Me.Domain.ProjetosAreaServicos.Repository;
 using Proj4Me.Domain.Colaboradores.Repository;
 using Proj4Me.Domain.Perfis.Repository;
-using Proj4Me.Infra.CrossCuting.Bus;
+using Proj4Me.Infra.CrossCutting.Bus;
 using Proj4Me.Infra.Data.Context;
 using Proj4Me.Infra.Data.Repository;
 using Proj4Me.Infra.Data.UoW;
@@ -23,8 +23,10 @@ using Proj4Me.Domain.Colaboradores.Events;
 using Proj4Me.Domain.Perfis.Events;
 using Proj4Me.Infra.Service.Interfaces;
 using Proj4Me.Infra.Service.Services;
+using Proj4Me.Infra.CrossCutting.Identity.Services;
+using Proj4Me.Infra.CrossCutting.Identity.Models;
 
-namespace Proj4Me.Infra.CrossCuting.IoC
+namespace Proj4Me.Infra.CrossCutting.IoC
 {
   public class NativeInjectorBootStrapper
   {
@@ -67,6 +69,7 @@ namespace Proj4Me.Infra.CrossCuting.IoC
       services.AddScoped<IHandler<PerfilRegistradoEvent>, PerfilEventHandler>();
       services.AddScoped<IHandler<PerfilAtualizadoEvent>, PerfilEventHandler>();
       services.AddScoped<IHandler<PerfilExcluidoEvent>, PerfilEventHandler>();
+
       //Infra - Data
       services.AddScoped<IProjetoAreaServicoRepository, ProjetoAreaServicoRepository>();
       services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
@@ -74,11 +77,18 @@ namespace Proj4Me.Infra.CrossCuting.IoC
       services.AddScoped<IServiceRepository, ServiceRepository>();
 
       services.AddScoped<IUnitOfWork, UnitOfWork>();
+
       // nao tem interface porque o context nao dipoe de interface
       services.AddSingleton<ProjetoAreaServicoContext>();
       services.AddScoped<ProjetoAreaServicoContext>();
+
       //Infra Bus
       services.AddScoped<IBus, InMemoryBus>();
+
+      // Infra - Identity
+      services.AddTransient<IEmailSender, AuthMessageSender>();
+      services.AddTransient<ISmsSender, AuthMessageSender>();
+      services.AddScoped<IUser, AspNetUser>();
     }
   }
 }
