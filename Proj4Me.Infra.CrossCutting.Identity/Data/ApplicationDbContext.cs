@@ -23,5 +23,11 @@ namespace Proj4Me.Infra.CrossCutting.Identity.Data
 
       optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      modelBuilder.Seed();
+      base.OnModelCreating(modelBuilder);
+    }
   }
 }

@@ -25,8 +25,7 @@ namespace Proj4Me.Infra.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false),
-                    Descricao = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Nome = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {
