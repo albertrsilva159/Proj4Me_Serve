@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.Service", "Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.CrossCutting.Identity", "Proj4Me.Infra.CrossCutting.Identity\Proj4Me.Infra.CrossCutting.Identity.csproj", "{772B1C50-1F49-4CF6-BD47-DE722A0D1A16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proj4Me.Infra.CrossCutting.AspNetFilters", "Proj4Me.Infra.CrossCutting.AspNetFilters\Proj4Me.Infra.CrossCutting.AspNetFilters.csproj", "{3BD733A5-BD2C-4593-9708-E57B4A3C3102}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{772B1C50-1F49-4CF6-BD47-DE722A0D1A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{772B1C50-1F49-4CF6-BD47-DE722A0D1A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{772B1C50-1F49-4CF6-BD47-DE722A0D1A16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BD733A5-BD2C-4593-9708-E57B4A3C3102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BD733A5-BD2C-4593-9708-E57B4A3C3102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD733A5-BD2C-4593-9708-E57B4A3C3102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BD733A5-BD2C-4593-9708-E57B4A3C3102}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{EA20D90F-C16F-4C7B-A5F7-8E2ECEAC3C0E} = {8B3BAA1E-7E19-420B-9C73-8D31101B82FD}
 		{2E00A1CE-B730-46D4-AA68-23928120E7B7} = {EA20D90F-C16F-4C7B-A5F7-8E2ECEAC3C0E}
 		{772B1C50-1F49-4CF6-BD47-DE722A0D1A16} = {E6551035-A1B3-4817-A26E-82B654100A2B}
+		{3BD733A5-BD2C-4593-9708-E57B4A3C3102} = {E6551035-A1B3-4817-A26E-82B654100A2B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9BDAED4E-739C-4461-9C8C-5FA0DDDE40F8}

@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Proj4Me.Application.Interfaces;
 using Proj4Me.Application.ViewModels;
@@ -15,12 +16,15 @@ namespace Proj4Me.Web.Controllers
     }
 
     // GET: Perfil
+    //[Route("")]
+    [Route("listar-perfis")]
     public IActionResult Index()
     {
       return View(_perfilAppService.GetAll());
     }
 
     // GET: Perfil/Details/5
+    [Route("dados-do-perfil/{id:guid}")]
     public IActionResult Details(Guid? id)
     {
       if (id == null)
@@ -38,6 +42,8 @@ namespace Proj4Me.Web.Controllers
     }
 
     // GET: Perfil/Create
+    [Route("novo-perfil")]
+    [Authorize(Policy = "PodeGravar")]
     public IActionResult Create()
     {
       return View();
@@ -48,6 +54,8 @@ namespace Proj4Me.Web.Controllers
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Route("novo-perfil")]
+    [Authorize(Policy = "PodeGravar")]
     public IActionResult Create(PerfilViewModel perfilViewModel)
     {
       if (!ModelState.IsValid) return View(perfilViewModel);
@@ -58,6 +66,8 @@ namespace Proj4Me.Web.Controllers
     }
 
     // GET: Perfil/Edit/5
+    [Route("editar-perfil/{id:guid}")]
+    [Authorize(Policy = "PodeGravar")]
     public IActionResult Edit(Guid? id)
     {
       if (id == null)
@@ -80,6 +90,8 @@ namespace Proj4Me.Web.Controllers
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Route("editar-perfil/{id:guid}")]
+    [Authorize(Policy = "PodeGravar")]
     public IActionResult Edit(PerfilViewModel perfilViewModel)
     {
       if (!ModelState.IsValid) return View(perfilViewModel);
@@ -92,6 +104,8 @@ namespace Proj4Me.Web.Controllers
     }
 
     // GET: Perfil/Delete/5
+    [Route("excluir-perfil/{id:guid}")]
+    [Authorize(Policy = "PodeGravar")]
     public IActionResult Delete(Guid? id)
     {
       if (id == null)
@@ -112,6 +126,8 @@ namespace Proj4Me.Web.Controllers
     // POST: Perfil/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Route("excluir-perfil/{id:guid}")]
+    [Authorize(Policy = "PodeGravar")]
     public IActionResult DeleteConfirmed(Guid id)
     {
       _perfilAppService.Remove(id);

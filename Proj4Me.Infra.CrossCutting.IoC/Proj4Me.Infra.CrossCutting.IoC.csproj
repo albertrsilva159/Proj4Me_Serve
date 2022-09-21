@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Proj4Me.Application\Proj4Me.Application.csproj" />
     <ProjectReference Include="..\Proj4Me.Domain\Proj4Me.Domain.csproj" />
+    <ProjectReference Include="..\Proj4Me.Infra.CrossCutting.AspNetFilters\Proj4Me.Infra.CrossCutting.AspNetFilters.csproj" />
     <ProjectReference Include="..\Proj4Me.Infra.CrossCutting.Bus\Proj4Me.Infra.CrossCutting.Bus.csproj" />
     <ProjectReference Include="..\Proj4Me.Infra.CrossCutting.Identity\Proj4Me.Infra.CrossCutting.Identity.csproj" />
     <ProjectReference Include="..\Proj4Me.Infra.Data\Proj4Me.Infra.Data.csproj" />

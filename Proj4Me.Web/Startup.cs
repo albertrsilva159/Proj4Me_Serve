@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Identity;
 using FluentValidation.Validators;
 using Microsoft.Extensions.Logging;
 using System;
+using Microsoft.AspNetCore.Mvc;
+using Proj4Me.Infra.CrossCutting.AspNetFilters;
 
 //using Proj4Me.Infra.CrossCutting.Identity.Model;
 
@@ -43,13 +45,23 @@ namespace Proj4Me.Web
           .AddEntityFrameworkStores<ApplicationDbContext>()
           .AddDefaultTokenProviders();
 
+      services.AddAuthorization(options =>
+      {
+        options.AddPolicy("PodeLerProjetos", policy => policy.RequireClaim("ProjetosAreaServico", "Ler"));
+        options.AddPolicy("PodeGravar", policy => policy.RequireClaim("ProjetosAreaServico", "Gravar"));
+      });
+
       services.AddScoped<IProjetoAreaServicoAppService, ProjetoAreaServicoAppService>();
       
-      services.AddAutoMapper(typeof(Startup)); 
+      services.AddAutoMapper(typeof(Startup));
       //services.AddAutoMapper();
-      services.AddMvc();
+      services.AddMvc(options =>
+      {
+        options.Filters.Add(new ServiceFilterAttribute(typeof(GlobalExceptionHandlingFilter)));
+        options.Filters.Add(new ServiceFilterAttribute(typeof(GlobalActionLogger)));
+      });
       //services.AddMvcCore();      
-      
+
       RegisterServices(services);
 
     }
@@ -72,10 +84,26 @@ namespace Proj4Me.Web
       app.UseHttpsRedirection();
       app.UseStaticFiles();
 
+      if (env.IsDevelopment())
+      {
+        app.UseDeveloperExceptionPage();
+        //app.UseDatabaseErrorPage();
+      }
+      else
+      {
+        app.UseExceptionHandler("/erro-de-aplicacao");
+        app.UseStatusCodePagesWithReExecute("/erro-de-aplicacao/{0}");
+      }
+
       app.UseRouting();
       app.UseAuthentication();
       app.UseAuthorization();
       //app.UseIdentity();
+
+      //app.UseEndpoints(endpoints =>
+      //{
+      //  endpoints.MapControllers();
+      //});
 
       app.UseEndpoints(endpoints =>
       {

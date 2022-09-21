@@ -25,6 +25,8 @@ using Proj4Me.Infra.Service.Interfaces;
 using Proj4Me.Infra.Service.Services;
 using Proj4Me.Infra.CrossCutting.Identity.Services;
 using Proj4Me.Infra.CrossCutting.Identity.Models;
+using Microsoft.Extensions.Logging;
+using Proj4Me.Infra.CrossCutting.AspNetFilters;
 
 namespace Proj4Me.Infra.CrossCutting.IoC
 {
@@ -89,6 +91,12 @@ namespace Proj4Me.Infra.CrossCutting.IoC
       services.AddTransient<IEmailSender, AuthMessageSender>();
       services.AddTransient<ISmsSender, AuthMessageSender>();
       services.AddScoped<IUser, AspNetUser>();
+
+      // Infra - Filtros de log
+      services.AddScoped<ILogger<GlobalExceptionHandlingFilter>, Logger<GlobalExceptionHandlingFilter>>();
+      services.AddScoped<ILogger<GlobalActionLogger>, Logger<GlobalActionLogger>>();
+      services.AddScoped<GlobalExceptionHandlingFilter>();
+      services.AddScoped<GlobalActionLogger>();
     }
   }
 }
