@@ -9,6 +9,7 @@ namespace Proj4Me.Infra.CrossCutting.Identity.Models
 {
   public class AspNetUser : IUser
   {
+    //injetar o IHttpCOntextAccessor pra poder ter informacoes do usuario logado
     private readonly IHttpContextAccessor _accessor;
 
     public AspNetUser(IHttpContextAccessor accessor)

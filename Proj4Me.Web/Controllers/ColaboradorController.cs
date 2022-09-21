@@ -3,25 +3,38 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Proj4Me.Application.Interfaces;
 using Proj4Me.Application.ViewModels;
+using Proj4Me.Domain.Core.Notification;
+using Proj4Me.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Proj4Me.Web.Controllers
 {
-  public class ColaboradorController : Controller
+  
+  public class ColaboradorController : BaseController
   {
     private readonly IColaboradorAppService _colaboradorAppService;
 
-    public ColaboradorController(IColaboradorAppService colaboradorAppService)
+    public ColaboradorController(IColaboradorAppService colaboradorAppService,
+                                 IDomainNotificationHandler<DomainNotification> notifications,
+                                 IUser user) : base(notifications, user)
     {
       _colaboradorAppService = colaboradorAppService;
     }
 
-    // GET: Colaborador
+
+    [Route("Listar-Colaboradores")]
     public IActionResult Index()
     {
       return View(_colaboradorAppService.GetAll());
     }
 
-    // GET: Colaborador/Details/5
+    [Route("dados-do-colaborador/{id:guid}")]
     public IActionResult Details(Guid? id)
     {
       if (id == null)
@@ -38,17 +51,15 @@ namespace Proj4Me.Web.Controllers
       return View(colaboradorViewModel);
     }
 
-    // GET: Colaborador/Create
+    [Route("novo-colaborador")]
     public IActionResult Create()
     {
       return View();
     }
 
-    // POST: Colaborador/Create
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
+     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Route("novo-colaborador")]
     public IActionResult Create(ColaboradorViewModel colaboradorViewModel)
     {
       if (!ModelState.IsValid) return View(colaboradorViewModel);
@@ -57,8 +68,8 @@ namespace Proj4Me.Web.Controllers
 
       return View(colaboradorViewModel);
     }
-
-    // GET: Colaborador/Edit/5
+   
+    [Route("editar-colaborador/{id:guid}")]
     public IActionResult Edit(Guid? id)
     {
       if (id == null)
@@ -76,11 +87,9 @@ namespace Proj4Me.Web.Controllers
       return View(colaboradorViewModel);
     }
 
-    // POST: Colaborador/Edit/5
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Route("editar-colaborador/{id:guid}")]
     public IActionResult Edit(ColaboradorViewModel colaboradorViewModel)
     {
       if (!ModelState.IsValid) return View(colaboradorViewModel);
@@ -92,7 +101,7 @@ namespace Proj4Me.Web.Controllers
       return View(colaboradorViewModel);
     }
 
-    // GET: Colaborador/Delete/5
+    [Route("editar-colaborador/{id:guid}")]
     public IActionResult Delete(Guid? id)
     {
       if (id == null)
@@ -110,9 +119,9 @@ namespace Proj4Me.Web.Controllers
       return View(colaboradorViewModel);
     }
 
-    // POST: Colaborador/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Route("editar-colaborador/{id:guid}")]
     public IActionResult DeleteConfirmed(Guid id)
     {
       _colaboradorAppService.Remove(id);

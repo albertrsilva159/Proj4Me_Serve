@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿//using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
+//using Microsoft.Extensions.Configuration;
+//using Proj4Me.Infra.CrossCutting.Identity.Models;
+//using System.IO;
+
+using System.IO;
+using Proj4Me.Infra.CrossCutting.Identity.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Proj4Me.Infra.CrossCutting.Identity.Models;
-using System.IO;
 
 
 namespace Proj4Me.Infra.CrossCutting.Identity.Data

@@ -4,16 +4,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Proj4Me.Application.Interfaces;
 using Proj4Me.Application.ViewModels;
+using Proj4Me.Domain.Core.Notification;
+using Proj4Me.Domain.Interfaces;
 
 namespace Proj4Me.Web.Controllers
 {
-  public class ProjetoAreaServicoController : Controller
+  //[Route("")]
+  public class ProjetoAreaServicoController : BaseController
   {
     private readonly IProjetoAreaServicoAppService _projetoAreaServicoAppService;
     private readonly IColaboradorAppService _colaboradorAppService;
     private readonly IPerfilAppService _perfilAppService;
 
-    public ProjetoAreaServicoController(IProjetoAreaServicoAppService projetoAreaServicoAppService, IColaboradorAppService colaboradorAppService, IPerfilAppService perfilAppService)
+    public ProjetoAreaServicoController(IProjetoAreaServicoAppService projetoAreaServicoAppService, 
+                                        IColaboradorAppService colaboradorAppService, 
+                                        IPerfilAppService perfilAppService,
+                                        IDomainNotificationHandler<DomainNotification> notifications,
+                                        IUser user) : base(notifications, user)
     {
       _projetoAreaServicoAppService = projetoAreaServicoAppService;
       _colaboradorAppService = colaboradorAppService;
@@ -21,6 +28,8 @@ namespace Proj4Me.Web.Controllers
     }
 
     // GET: ProjetoAreaServicoViewModels
+    //[Route("")]
+    [Route("listar-projetos")]
     public IActionResult Index()
     {
       RelatorioProjetosViewModel relatorio = new RelatorioProjetosViewModel();
@@ -83,6 +92,7 @@ namespace Proj4Me.Web.Controllers
     }
 
     // GET: ProjetoAreaServicoViewModels/Details/5
+    [Route("dados-do-projeto/{id:guid}")]
     public IActionResult Details(Guid? id)
     {
       if (id == null)
@@ -100,6 +110,7 @@ namespace Proj4Me.Web.Controllers
     }
 
     // GET: ProjetoAreaServicoViewModels/Create
+    [Route("novo-projeto")]
     public IActionResult Create()
     {
       ViewData["ColaboradorId"] = new SelectList(_colaboradorAppService.GetAll(), "Id", "Nome");
@@ -112,6 +123,7 @@ namespace Proj4Me.Web.Controllers
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Route("novo-projeto")]
     public IActionResult Create(ProjetoAreaServicoViewModel projetoAreaServicoViewModel)
     {
       if (!ModelState.IsValid) return View(projetoAreaServicoViewModel);
@@ -124,6 +136,7 @@ namespace Proj4Me.Web.Controllers
     }
 
     // GET: ProjetoAreaServicoViewModels/Edit/5
+    [Route("editar-projeto/{id:guid}")]
     public IActionResult Edit(Guid id)
     {
       if (id == null)
@@ -147,6 +160,7 @@ namespace Proj4Me.Web.Controllers
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Route("editar-projeto/{id:guid}")]
     public IActionResult Edit(ProjetoAreaServicoViewModel projetoAreaServicoViewModel)
     {
       if (!ModelState.IsValid) return View(projetoAreaServicoViewModel);
@@ -159,6 +173,7 @@ namespace Proj4Me.Web.Controllers
     }
 
     // GET: ProjetoAreaServicoViewModels/Delete/5
+    [Route("excluir-projeto/{id:guid}")]
     public IActionResult Delete(Guid? id)
     {
       if (id == null)
@@ -179,6 +194,7 @@ namespace Proj4Me.Web.Controllers
     // POST: ProjetoAreaServicoViewModels/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
+    [Route("excluir-projeto/{id:guid}")]
     public IActionResult DeleteConfirmed(Guid id)
     {
       _projetoAreaServicoAppService.Remove(id);

@@ -1,31 +1,27 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Proj4Me.Application.Interfaces;
 using Proj4Me.Domain.Core.Notification;
 using Proj4Me.Domain.Interfaces;
 using Proj4Me.Infra.CrossCutting.Identity.Models;
-using Proj4Me.Infra.CrossCutting.Identity.Services;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-//using Microsoft.VisualStudio.Web.CodeGeneration;
-using Proj4Me.Domain.Core.Bus;
 using Proj4Me.Infra.CrossCutting.Identity.Models.AccountViewModels;
-using System;
-using Proj4Me.Domain.Colaboradores.Commands;
-using Proj4Me.Application.ViewModels;
-using Proj4Me.Application.Interfaces;
+using Proj4Me.Infra.CrossCutting.Identity.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+
 
 namespace Proj4Me.Web.Controllers
 {
+  [Authorize]
   public class AccountController : BaseController
   {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IEmailSender _emailSender;
     private readonly ISmsSender _smsSender;
+    private readonly ILogger _logger;
     private readonly IColaboradorAppService _colaboradorAppService;
 
     public AccountController(
@@ -44,6 +40,7 @@ namespace Proj4Me.Web.Controllers
       _emailSender = emailSender;
       _smsSender = smsSender;
       _colaboradorAppService = colaboradorAppService;
+      _logger = loggerFactory.CreateLogger<AccountController>();
     }
 
     //GET: /Account/Register
@@ -65,20 +62,26 @@ namespace Proj4Me.Web.Controllers
       {
         var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
 
+
         //user.Claims.Add(new IdentityUserClaim<string> { ClaimType = "Eventos", ClaimValue = "Ler" });
         //user.Claims.Add(new IdentityUserClaim<string> { ClaimType = "Eventos", ClaimValue = "Gravar" });
+
+    
 
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
-          var colaborador = new ColaboradorViewModel
-          {
-            Id = Guid.Parse(user.Id),
-            Email = user.Email,
-            Nome = model.Nome         
-          };
+          await _userManager.AddClaimAsync(user, new Claim("Projetos", "Ler"));
+          await _userManager.AddClaimAsync(user, new Claim("Projetos", "Gravar"));
 
-          _colaboradorAppService.Register(colaborador);
+          //var colaborador = new ColaboradorViewModel
+          //{
+          //  Id = Guid.Parse(user.Id),
+          //  Email = user.Email,
+          //  Nome = model.Nome         
+          //};
+
+          //_colaboradorAppService.Register(colaborador);
 
           if (!OperacaoValida())
           {
@@ -93,7 +96,6 @@ namespace Proj4Me.Web.Controllers
         AddErrors(result);
       }
 
-      // If we got this far, something failed, redisplay form
       return View(model);
     }
 
@@ -123,7 +125,7 @@ namespace Proj4Me.Web.Controllers
         var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
-          //_logger.LogInformation(1, "User logged in.");
+          _logger.LogInformation(1, "User logged in.");
           return RedirectToLocal(returnUrl);
         }
         //if (result.RequiresTwoFactor)
@@ -154,6 +156,12 @@ namespace Proj4Me.Web.Controllers
       await _signInManager.SignOutAsync();
       //_logger.LogInformation(4, "User logged out.");
       return RedirectToAction(nameof(HomeController.Index), "Home");
+    }
+
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+      return RedirectToAction("Erros", "Erro", new { id = 403 });
     }
     #region Helpers
 
