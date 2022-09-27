@@ -24,7 +24,7 @@ using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext
 using System.Text;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
-//teste branch
+using MediatR;
 
 namespace Proj4Me.Services.Api.Controllers
 {
@@ -35,25 +35,27 @@ namespace Proj4Me.Services.Api.Controllers
     private readonly ILogger _logger;
     private readonly IBus _bus;
     private readonly IConfiguration _configuration;
-    //private readonly IMediatorHandler _mediator;
-    private readonly JwtTokenOptions _jwtTokenOptions;
+    private readonly IMediatorHandler _mediator;
+    private readonly TokenDescriptor _tokenDescriptor;
+    //private readonly JwtTokenOptions _jwtTokenOptions;
     
     public AccountController(
                 UserManager<ApplicationUser> userManager,
                 SignInManager<ApplicationUser> signInManager,
                 ILoggerFactory loggerFactory,
                 IOptions<JwtTokenOptions> jwtTokenOptions,
-                IBus bus,
-                //TokenDescriptor tokenDescriptor,
+                IMediatorHandler mediator,         
+                TokenDescriptor tokenDescriptor,
                 IConfiguration configuration,
-                IDomainNotificationHandler<DomainNotification> notifications,
+                INotificationHandler<DomainNotification> notifications,
                 IUser user
-                ) : base(notifications, user, bus)
+                ) : base(notifications, user, mediator)
     {
       _userManager = userManager;
       _signInManager = signInManager;
-      _bus = bus;
-      _jwtTokenOptions = jwtTokenOptions.Value;
+      _mediator = mediator;
+      //_jwtTokenOptions = jwtTokenOptions.Value;
+      _tokenDescriptor = tokenDescriptor;
       _configuration = configuration;
       _logger = loggerFactory.CreateLogger<AccountController>();
       //ThrowIfInvalidOptions(_jwtTokenOptions);// assim que o token for passado ele vai ser validado      
@@ -71,7 +73,7 @@ namespace Proj4Me.Services.Api.Controllers
     {
       if (version == 2)
       {
-        return Response(new { Message = "API V2 n„o disponÌvel" });
+        return Response(new { Message = "API V2 n√£o dispon√≠vel" });
       }
 
       if (!ModelState.IsValid)
@@ -90,7 +92,7 @@ namespace Proj4Me.Services.Api.Controllers
         await _userManager.AddClaimAsync(user, new Claim("Projetos", "Gravar"));
 
         var registroCommand = new RegistrarColaboradorCommand(model.Nome, user.Email);
-        //await _mediator.EnviarComando(registroCommand);
+        await _mediator.EnviarComando(registroCommand);
 
         if (!OperacaoValida())
         {
@@ -167,24 +169,42 @@ namespace Proj4Me.Services.Api.Controllers
 
       userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
       userClaims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-      userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, await _jwtTokenOptions.JtiGenerator()));
-      userClaims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtTokenOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64));// quando o token foi gerado
-    
-      var jwt = new JwtSecurityToken(
-            issuer: _configuration["JwtTokenOptions:Issuer"], //_jwtTokenOptions.Issuer, 
-            audience:  _jwtTokenOptions.Audience,
-            claims: userClaims,
-            notBefore: _jwtTokenOptions.NotBefore,
-            expires: _jwtTokenOptions.Expiration,
-            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature));//_jwtTokenOptions.SigningCredentials);
+      userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+      userClaims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));// quando o token foi gerado
+
+      // Necess√°rio converver para IdentityClaims
+      var identityClaims = new ClaimsIdentity();
+      identityClaims.AddClaims(userClaims);
+
+      var handler = new JwtSecurityTokenHandler();
+      var signingConf = new SigningCredentialsConfiguration();
+
+      var securityToken = handler.CreateToken(new SecurityTokenDescriptor
+      {
+        Issuer = _tokenDescriptor.Issuer,
+        Audience = _tokenDescriptor.Audience,
+        SigningCredentials = signingConf.SigningCredentials,
+        Subject = identityClaims,
+        NotBefore = DateTime.Now,
+        Expires = DateTime.Now.AddMinutes(_tokenDescriptor.MinutesValid)
+      });
+
+      //var jwt = new JwtSecurityToken(
+      //      issuer: _configuration["JwtTokenOptions:Issuer"], //_jwtTokenOptions.Issuer, 
+      //      audience:  _jwtTokenOptions.Audience,
+      //      claims: userClaims,
+      //      notBefore: _jwtTokenOptions.NotBefore,
+      //      expires: _jwtTokenOptions.Expiration,
+      //      signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature));//_jwtTokenOptions.SigningCredentials);
 
       //criar o encode do token para ficar como uma string
-      var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+      //var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+      var encodedJwt = handler.WriteToken(securityToken);
 
       var response = new
       {
         access_token = encodedJwt,
-        expires_in = (int)_jwtTokenOptions.ValidFor.TotalSeconds,// informa quantos segundos vai expirar
+        expires_in = DateTime.Now.AddMinutes(_tokenDescriptor.MinutesValid),///(int)_jwtTokenOptions.ValidFor.TotalSeconds,// informa quantos segundos vai expirar
         user = user
       };
 

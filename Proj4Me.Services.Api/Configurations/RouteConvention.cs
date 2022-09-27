@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Proj4Me.Services.Api.Configurations
 {
@@ -46,5 +48,15 @@ namespace Proj4Me.Services.Api.Configurations
         {
             opts.Conventions.Insert(0, new RouteConvention(routeAttribute));
         }
+
+    public static void AddApiVersioning(this IServiceCollection services, string routeUrl)
+    {
+      if (services == null) throw new ArgumentNullException(nameof(services));
+
+      services.Configure<MvcOptions>(opt =>
+      {
+        opt.UseCentralRoutePrefix(new RouteAttribute(routeUrl));
+      });
     }
+  }
 }

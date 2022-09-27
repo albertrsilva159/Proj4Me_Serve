@@ -1,5 +1,8 @@
-﻿using Proj4Me.Domain.Core.Events;
+﻿using MediatR;
+using Proj4Me.Domain.Core.Events;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Proj4Me.Domain.ProjetosAreaServicos.Events
 {
@@ -7,30 +10,26 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Events
   /// a ideia é fazer um tipo log da informacao, a ideia é gravar o estada da entidade saber quando foi criado, excluido ou alterado
   /// </summary>
   public class ProjetoAreaServicoEventHandler :
-    IHandler<ProjetoAreaServicoRegistradoEvent>,
-    IHandler<ProjetoAreaServicoAtualizadoEvent>,
-    IHandler<ProjetoAreaServicoExcluidoEvent>
+    INotificationHandler<ProjetoAreaServicoRegistradoEvent>,
+    INotificationHandler<ProjetoAreaServicoAtualizadoEvent>,
+    INotificationHandler<ProjetoAreaServicoExcluidoEvent>
   {
-    public void Handle(ProjetoAreaServicoExcluidoEvent message)
+    public Task Handle(ProjetoAreaServicoExcluidoEvent messag, CancellationToken cancellationTokene)
     {
-      // enviar email
-      Console.ForegroundColor = ConsoleColor.Green;
-      Console.WriteLine("Evento excluir com sucesso!");
-
+      // TODO: Disparar alguma ação
+      return (Task<Unit>)Task.CompletedTask;
     }
 
-    public void Handle(ProjetoAreaServicoAtualizadoEvent message)
+    public Task Handle(ProjetoAreaServicoAtualizadoEvent message, CancellationToken cancellationToken)
     {
-      // enviar email
-      Console.ForegroundColor = ConsoleColor.Green;
-      Console.WriteLine("Evento atualizar com sucesso!");
+      // TODO: Disparar alguma ação
+      return (Task<Unit>)Task.CompletedTask;
     }
 
-    public void Handle(ProjetoAreaServicoRegistradoEvent message)
+    public Task Handle(ProjetoAreaServicoRegistradoEvent message, CancellationToken cancellationToken)
     {
-      // enviar email
-      Console.ForegroundColor = ConsoleColor.Green;
-      Console.WriteLine("Evento registrar com sucesso!");
+      // TODO: Disparar alguma ação
+      return (Task<Unit>)Task.CompletedTask;
     }
   }
 }

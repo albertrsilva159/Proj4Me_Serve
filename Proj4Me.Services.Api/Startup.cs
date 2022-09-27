@@ -1,174 +1,130 @@
 using System;
-using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+using Proj4Me.Infra.CrossCutting.AspNetFilters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Proj4Me.Infra.CrossCutting.AspNetFilters;
-using Proj4Me.Infra.CrossCutting.Bus;
 using Proj4Me.Infra.CrossCutting.Identity.Data;
-using Proj4Me.Infra.CrossCutting.Identity.Models;
-using Proj4Me.Infra.CrossCutting.IoC;
 using Proj4Me.Services.Api.Configurations;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
-using Microsoft.OpenApi.Models;
 using Proj4Me.Services.Api.Middlewares;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Proj4Me.Infra.CrossCutting.Identity.Authorization;
-using Newtonsoft.Json.Serialization;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using AutoMapper;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Proj4Me.Services.Api
 {
   public class Startup
   {
-    public Startup(IConfiguration configuration)
+    public Startup(IHostingEnvironment env)
     {
-      Configuration = configuration;
+      var builder = new ConfigurationBuilder()
+          .SetBasePath(env.ContentRootPath)
+          .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+          .AddEnvironmentVariables();
+      Configuration = builder.Build();
     }
 
-    public IConfiguration Configuration { get; }
-    // This method gets called by the runtime. Use this method to add services to the container.
+    public IConfigurationRoot Configuration { get; }
+
     public void ConfigureServices(IServiceCollection services)
     {
-      // Add Framework services
+      // Contexto do EF para o Identity
       services.AddDbContext<ApplicationDbContext>(options =>
-              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-      //services.AddControllersWithViews();
+          options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-      // Add application services
-      services.AddIdentity<ApplicationUser, IdentityRole>()
-              .AddEntityFrameworkStores<ApplicationDbContext>()
-              .AddDefaultTokenProviders();
+      // Configurações de Autenticação, Autorização e JWT.
+      services.AddMvcSecurity(Configuration);
 
+      // Options para configurações customizadas
       services.AddOptions();
-      services.AddAutoMapper(typeof(Startup));
+
+      // MVC com restrição de XML e adição de filtro de ações.
       services.AddMvc(options =>
       {
-        options.OutputFormatters.Remove(new XmlDataContractSerializerOutputFormatter());// a api so vai receber json
-        options.UseCentralRoutePrefix(new RouteAttribute("api/v{version}"));
-
-        // politica de autorizacao
-        var policy = new AuthorizationPolicyBuilder()
-                   .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                   .RequireAuthenticatedUser()
-                   .Build();
-
-        options.Filters.Add(new AuthorizeFilter(policy)); // todo filtro de autorização precisa ter o json web token jwt, ou seja onde tiver o [Authorize] precisa ter o token pra acessar
+        options.OutputFormatters.Remove(new XmlDataContractSerializerOutputFormatter());
         options.Filters.Add(new ServiceFilterAttribute(typeof(GlobalActionLogger)));
       });
-
-      services.AddAuthorization(options =>
-      {
-        options.AddPolicy("Ler", policy => policy.RequireClaim("Projetos", "Ler"));
-        options.AddPolicy("PodeGravar", policy => policy.RequireClaim("Projetos", "Gravar"));
-      });
       
-      services.Configure<JwtTokenOptions>(Configuration.GetSection("JwtTokenOptions"));
+      // Versionamento do WebApi
+      services.AddApiVersioning("api/v{version}");
 
-      var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtTokenOptions));
-      var key = Encoding.ASCII.GetBytes("EventosIoTokenServer");  
+      // AutoMapper
+      services.AddAutoMapper(typeof(Startup));
 
-      services.AddAuthentication(x =>
-      {
-        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-      })
-            .AddJwtBearer(x =>
-            {
-              x.RequireHttpsMetadata = false;
-              x.SaveToken = true;
-              x.TokenValidationParameters = new TokenValidationParameters
-              {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+      // Configurações do Swagger
+      services.AddSwaggerConfig();
 
-                ValidateIssuer = true,
-                ValidateAudience = false,
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
+      // MediatR
+      services.AddMediatR(typeof(Startup));
 
-                ValidIssuer = jwtAppSettingOptions[nameof(JwtTokenOptions.Issuer)],  //Configuration["JJwtTokenOptionswt:Issuer"], ///"InventarioNeTAuthenticationServer", //Configuration["Jwt:Issuer"], ///jwtAppSettingOptions[nameof(JwtTokenOptions.Issuer)],                
-                ValidAudience = jwtAppSettingOptions[nameof(JwtTokenOptions.Audience)],
-
-                ClockSkew = TimeSpan.Zero
-              };
-            });
-
-      services.AddSwaggerGen(options =>
-      {
-        options.SwaggerDoc("v1", new OpenApiInfo
-        {
-          Version = "v1",
-          Title = "Proj4Me",
-          Description = "Controle de gerenciamento de projeto"
-        });
-      });
-   
-      services.AddAutoMapper(typeof(Startup)); 
-
-      services.AddControllers().AddNewtonsoftJson(options =>
-                                                  { options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                                                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                                                   }); 
-    RegisterServices(services);
+      // Registrar todos os DI
+      services.AddDIConfiguration();
     }
 
     public void Configure(IApplicationBuilder app,
-                              IHostingEnvironment env,
-                              ILoggerFactory loggerFactory,
-                              IHttpContextAccessor accessor)
+                          IHostingEnvironment env,
+                          ILoggerFactory loggerFactory,
+                          IHttpContextAccessor accessor)
     {
 
-      if (env.IsDevelopment())
-      {
-        app.UseDeveloperExceptionPage();
-      }
+      #region Logging
 
-      app.UseHttpsRedirection();
-      app.UseRouting();
-      app.UseAuthorization();
+      //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+      //loggerFactory.AddDebug();
 
-      app.UseEndpoints(endpoints =>
-      {
-        endpoints.MapControllers();
-      });
-  
+
+      #endregion
+
+      #region Configurações MVC
+
       app.UseCors(c =>
       {
         c.AllowAnyHeader();
         c.AllowAnyMethod();
         c.AllowAnyOrigin();
       });
-
+ app.UseHttpsRedirection();
+ app.UseRouting();
+      app.UseStaticFiles();
       app.UseAuthentication();
-      app.UseAuthorization();      
 
+      app.UseEndpoints(endpoints =>
+      {
+        endpoints.MapControllers();
+      });
+
+
+      //app.UseMvc();      
+
+      #endregion
+
+      #region Swagger
+
+      if (env.IsProduction())
+      {
+        // Se não tiver um token válido no browser não funciona.
+        // Descomente para ativar a segurança.
+        // app.UseSwaggerAuthorized();
+      }
+
+
+     
+     
+  
+     
+      
       app.UseSwagger();
       app.UseSwaggerUI(s =>
       {
         s.SwaggerEndpoint("/swagger/v1/swagger.json", "Proj4Me v1");// caminho para chegar no swagger
       });
 
-      InMemoryBus.ContainerAccessor = () => accessor.HttpContext.RequestServices;
+      #endregion
     }
-
-    private static void RegisterServices(IServiceCollection services)
-    {
-      NativeInjectorBootStrapper.RegisterServices(services);
-    }    
   }
 }

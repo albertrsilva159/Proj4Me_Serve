@@ -1,36 +1,32 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Proj4Me.Domain.Core.Bus;
 using Proj4Me.Domain.Core.Notification;
 using Proj4Me.Domain.Interfaces;
 using System.Collections.Generic;
-using System;
-using Proj4Me.Application.Interfaces;
 using Proj4Me.Domain.ProjetosAreaServicos.Repository;
-using Proj4Me.Application.ViewModels;
-using System.Linq;
 using Proj4Me.Domain.ProjetosAreaServicos.Commands;
+using Proj4Me.Services.Api.ViewModels;
 
 namespace Proj4Me.Services.Api.Controllers
 {
   public class ProjetoAreaServico : BaseController
   {
-    private readonly IProjetoAreaServicoAppService _projetoAppService;
-    private readonly IBus _bus;
     private readonly IProjetoAreaServicoRepository _projetoAreaServicoRepository;
     private readonly IMapper _mapper;
+    private readonly IMediatorHandler _mediator;
 
-    public ProjetoAreaServico(IDomainNotificationHandler<DomainNotification> notifications,
-                             IUser user,
-                             IBus bus, IProjetoAreaServicoAppService projetoAppService,
+    public ProjetoAreaServico(INotificationHandler<DomainNotification> notifications,
+                             IUser user,                             
                              IProjetoAreaServicoRepository projetoAreaServicoRepository,
-                             IMapper mapper) : base(notifications, user, bus)
+                             IMapper mapper,
+                             IMediatorHandler mediator) : base(notifications, user, mediator)
     {
-      _projetoAppService = projetoAppService;
       _projetoAreaServicoRepository = projetoAreaServicoRepository;
       _mapper = mapper;
-      _bus = bus;
+      _mediator = mediator;
     }
 
     [HttpGet]
@@ -47,8 +43,6 @@ namespace Proj4Me.Services.Api.Controllers
     public ProjetoAreaServicoViewModel Get(Guid id, int version)
     {
       return _mapper.Map<ProjetoAreaServicoViewModel>(_projetoAreaServicoRepository.GetById(id));
-
-      //return _projetoAreaServicoRepository.GetById(id);
     }
 
     [HttpGet]
@@ -72,7 +66,8 @@ namespace Proj4Me.Services.Api.Controllers
 
       var projetoCommand = _mapper.Map<RegistrarProjetoAreaServicoCommand>(projetoAreaServicoViewModel);
 
-      _bus.SendCommand(projetoCommand);
+      _mediator.EnviarComando(projetoCommand);
+      
       return Response(projetoCommand);
     }
 
@@ -87,8 +82,11 @@ namespace Proj4Me.Services.Api.Controllers
         return Response();
       }
 
-      _projetoAppService.Update(projetoAreaServicoViewModel);
-      return Response(projetoAreaServicoViewModel);
+      var projetoCommand = _mapper.Map<AtualizarProjetoAreaServicoCommand>(projetoAreaServicoViewModel);
+
+      //_projetoAppService.Update(projetoAreaServicoViewModel);
+      _mediator.EnviarComando(projetoCommand);
+      return Response(projetoCommand);
     }
 
     [HttpDelete]
@@ -96,7 +94,10 @@ namespace Proj4Me.Services.Api.Controllers
     [Authorize(Policy = "Gravar")]
     public IActionResult Delete(Guid id)
     {
-      _projetoAppService.Remove(id);
+      var projetoAreaServicoViewModel = new ProjetoAreaServicoViewModel { Id = id };
+      var projetoCommand = _mapper.Map<ExcluirProjetoAreaServicoCommand>(projetoAreaServicoViewModel);
+
+      _mediator.EnviarComando(projetoCommand);
       return Response();
     }
   }

@@ -1,33 +1,31 @@
-﻿using Proj4Me.Domain.Core.Events;
-using System;
+﻿using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Proj4Me.Domain.Colaboradores.Events
 {
   public class ColaboradorEventHandler :
-    IHandler<ColaboradorRegistradoEvent>,
-    IHandler<ColaboradorAtualizadoEvent>,
-    IHandler<ColaboradorExcluidoEvent>
+    INotificationHandler<ColaboradorRegistradoEvent>,
+    INotificationHandler<ColaboradorAtualizadoEvent>,
+    INotificationHandler<ColaboradorExcluidoEvent>
   {
-    public void Handle(ColaboradorExcluidoEvent message)
+    public Task Handle(ColaboradorExcluidoEvent message, CancellationToken cancellationTokene)
     {
-      // enviar email
-      Console.ForegroundColor = ConsoleColor.Green;
-      Console.WriteLine("Evento excluir com sucesso!");
+      // TODO: Disparar alguma ação
+      return (Task<Unit>)Task.CompletedTask;
 
     }
 
-    public void Handle(ColaboradorAtualizadoEvent message)
+    public Task Handle(ColaboradorAtualizadoEvent message, CancellationToken cancellationTokene)
     {
-      // enviar email
-      Console.ForegroundColor = ConsoleColor.Green;
-      Console.WriteLine("Evento atualizar com sucesso!");
+      // TODO: Disparar alguma ação
+      return (Task<Unit>)Task.CompletedTask;
     }
 
-    public void Handle(ColaboradorRegistradoEvent message)
+    public Task Handle(ColaboradorRegistradoEvent message, CancellationToken cancellationTokene)
     {
-      // enviar email
-      Console.ForegroundColor = ConsoleColor.Green;
-      Console.WriteLine("Evento registrar com sucesso!");
+      // TODO: Disparar alguma ação
+      return (Task<Unit>)Task.CompletedTask;
     }
   }
 }

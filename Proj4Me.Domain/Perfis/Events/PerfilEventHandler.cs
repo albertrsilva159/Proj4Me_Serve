@@ -1,34 +1,32 @@
-﻿using Proj4Me.Domain.Core.Events;
+﻿using MediatR;
+using Proj4Me.Domain.Core.Events;
 using System;
-
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Proj4Me.Domain.Perfis.Events
 {
   public class PerfilEventHandler :
-    IHandler<PerfilRegistradoEvent>,
-    IHandler<PerfilAtualizadoEvent>,
-    IHandler<PerfilExcluidoEvent>
+    INotificationHandler<PerfilRegistradoEvent>,
+    INotificationHandler<PerfilAtualizadoEvent>,
+    INotificationHandler<PerfilExcluidoEvent>
   {
-    public void Handle(PerfilExcluidoEvent message)
+    public Task Handle(PerfilExcluidoEvent message, CancellationToken cancellationToken)
     {
-      // enviar email
-      Console.ForegroundColor = ConsoleColor.Green;
-      Console.WriteLine("Evento excluir com sucesso!");
-
+      // TODO: Disparar alguma ação
+      return (Task<Unit>)Task.CompletedTask;
     }
 
-    public void Handle(PerfilAtualizadoEvent message)
+    public Task Handle(PerfilAtualizadoEvent message, CancellationToken cancellationToken)
     {
-      // enviar email
-      Console.ForegroundColor = ConsoleColor.Green;
-      Console.WriteLine("Evento atualizar com sucesso!");
+      // TODO: Disparar alguma ação
+      return (Task<Unit>)Task.CompletedTask;
     }
 
-    public void Handle(PerfilRegistradoEvent message)
+    public Task Handle(PerfilRegistradoEvent message, CancellationToken cancellationToken)
     {
-      // enviar email
-      Console.ForegroundColor = ConsoleColor.Green;
-      Console.WriteLine("Evento registrar com sucesso!");
+      // TODO: Disparar alguma ação
+      return (Task<Unit>)Task.CompletedTask;
     }
   }
 }
