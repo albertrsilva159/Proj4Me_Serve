@@ -24,6 +24,7 @@ using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext
 using System.Text;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
+//teste branch
 
 namespace Proj4Me.Services.Api.Controllers
 {
