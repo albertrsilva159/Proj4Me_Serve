@@ -11,9 +11,9 @@ namespace Proj4Me.Infra.CrossCutting.Identity.Models.AccountViewModels
         [Required(ErrorMessage = "O nome é requerido")]
         public string Nome { get; set; }
 
-        [Required(ErrorMessage = "CPF Requerido")]
-        [StringLength(11)]
-        public string CPF { get; set; }
+        //[Required(ErrorMessage = "CPF Requerido")]
+        //[StringLength(11)]
+        //public string CPF { get; set; }
 
         [Required(ErrorMessage = "Email requerido")]
         [EmailAddress(ErrorMessage = "Email em formato inválido")]
