@@ -73,7 +73,7 @@ namespace Proj4Me.Services.Api.Controllers
     {
       if (version == 2)
       {
-        return Response(new { Message = "API V2 n„o disponÌvel" });
+        return Response(new { Message = "API V2 n√£o dispon√≠vel" });
       }
 
       if (!ModelState.IsValid)
@@ -172,7 +172,7 @@ namespace Proj4Me.Services.Api.Controllers
       userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
       userClaims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));// quando o token foi gerado
 
-      // Necess·rio converver para IdentityClaims
+      // Necess√°rio converver para IdentityClaims
       var identityClaims = new ClaimsIdentity();
       identityClaims.AddClaims(userClaims);
 
