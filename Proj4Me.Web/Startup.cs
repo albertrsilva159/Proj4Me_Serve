@@ -69,8 +69,12 @@ namespace Proj4Me.Web
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app,
                           IWebHostEnvironment env,
+                          ILoggerFactory loggerFactory,
                           IHttpContextAccessor accessor)// IHttpContextAccessor é o acesso ao nosso contexto http, 
     {
+      //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+      //loggerFactory.AddDebug();
+
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
@@ -96,9 +100,10 @@ namespace Proj4Me.Web
       }
 
       app.UseRouting();
+    //app.UseIdentity(); o UserIdentity foi substituido pelo UseAuthentication
       app.UseAuthentication();
       app.UseAuthorization();
-      //app.UseIdentity();
+      
 
       //app.UseEndpoints(endpoints =>
       //{

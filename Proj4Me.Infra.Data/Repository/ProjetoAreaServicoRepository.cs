@@ -28,7 +28,7 @@ namespace Proj4Me.Infra.Data.Repository
                   "from ProjetoAreaServico proj " +
                   "inner join colaborador col on col.Id = proj.ColaboradorId " +
                   "inner join perfil per on per.Id = proj.PerfilId ";
-      throw new Exception("ocorreu erro ai ô");
+
       return Db.Database.GetDbConnection().Query<ProjetoAreaServico, Colaborador, Perfil, ProjetoAreaServico>(sql3, (proj, col, per) =>
       {
         proj.AtribuirColaborador(col);

@@ -8,11 +8,11 @@ namespace Proj4Me.Infra.CrossCutting.Identity.Models.AccountViewModels
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Email obrigatória")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Senha obrigatória")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

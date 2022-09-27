@@ -5,8 +5,6 @@ VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Presentation", "1 - Presentation", "{9D5846A1-B010-4D6B-8970-F651624CE3CF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Services", "2 - Services", "{C9485A0D-2E05-4D19-AE1B-921A22C479A6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Application", "3 - Application", "{A91DD0B2-8595-458D-86D5-3BB58A8D5B46}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Domain", "4 - Domain", "{3B136928-66D4-46BF-9853-17181AA576B9}"
@@ -39,7 +37,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.Service", "Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.CrossCutting.Identity", "Proj4Me.Infra.CrossCutting.Identity\Proj4Me.Infra.CrossCutting.Identity.csproj", "{772B1C50-1F49-4CF6-BD47-DE722A0D1A16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proj4Me.Infra.CrossCutting.AspNetFilters", "Proj4Me.Infra.CrossCutting.AspNetFilters\Proj4Me.Infra.CrossCutting.AspNetFilters.csproj", "{3BD733A5-BD2C-4593-9708-E57B4A3C3102}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proj4Me.Infra.CrossCutting.AspNetFilters", "Proj4Me.Infra.CrossCutting.AspNetFilters\Proj4Me.Infra.CrossCutting.AspNetFilters.csproj", "{3BD733A5-BD2C-4593-9708-E57B4A3C3102}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Services", "2 - Services", "{7DA7CCB5-DC23-44D3-8B72-B77332B4DFA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proj4Me.Services.Api", "Proj4Me.Services.Api\Proj4Me.Services.Api.csproj", "{D8A8B5E8-92CC-43E4-BB89-4290A6800BFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,10 @@ Global
 		{3BD733A5-BD2C-4593-9708-E57B4A3C3102}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BD733A5-BD2C-4593-9708-E57B4A3C3102}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BD733A5-BD2C-4593-9708-E57B4A3C3102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A8B5E8-92CC-43E4-BB89-4290A6800BFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A8B5E8-92CC-43E4-BB89-4290A6800BFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A8B5E8-92CC-43E4-BB89-4290A6800BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A8B5E8-92CC-43E4-BB89-4290A6800BFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +116,7 @@ Global
 		{2E00A1CE-B730-46D4-AA68-23928120E7B7} = {EA20D90F-C16F-4C7B-A5F7-8E2ECEAC3C0E}
 		{772B1C50-1F49-4CF6-BD47-DE722A0D1A16} = {E6551035-A1B3-4817-A26E-82B654100A2B}
 		{3BD733A5-BD2C-4593-9708-E57B4A3C3102} = {E6551035-A1B3-4817-A26E-82B654100A2B}
+		{D8A8B5E8-92CC-43E4-BB89-4290A6800BFF} = {7DA7CCB5-DC23-44D3-8B72-B77332B4DFA6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9BDAED4E-739C-4461-9C8C-5FA0DDDE40F8}
