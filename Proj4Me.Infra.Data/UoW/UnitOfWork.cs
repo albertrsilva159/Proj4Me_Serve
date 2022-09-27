@@ -18,16 +18,14 @@ namespace Proj4Me.Infra.Data.UoW
       _context = context;
     }
 
-    public CommandResponse Commit()
-    {
-      //Savechange retorna o numero de linhas afetadas
-      var rowsAffected = _context.SaveChanges();
-      return new CommandResponse(rowsAffected > 0);
-    }
-
     public void Dispose()
     {
       _context.Dispose();
+    }
+
+    public bool Commit()
+    {
+      return _context.SaveChanges() > 0;
     }
   }
 }

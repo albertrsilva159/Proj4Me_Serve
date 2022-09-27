@@ -1,29 +1,28 @@
 using System;
 using System.Linq;
 using Proj4Me.Domain.Interfaces;
-//using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Proj4Me.Domain.Core.Notification;
-using Proj4Me.Domain.Core.Bus;
+
 
 namespace Proj4Me.Services.Api.Controllers
 {
   [Produces("application/json")]
   public abstract class BaseController : Controller
   {
-    private readonly IDomainNotificationHandler<DomainNotification> _notifications;
-    //private readonly IMediatorHandler _mediator;
-    private readonly IBus _bus;
+    private readonly DomainNotificationHandler _notifications;
+    private readonly IMediatorHandler _mediator;
     public Guid ColaboradorId { get; set; }
 
-    protected BaseController(IDomainNotificationHandler<DomainNotification> notifications,
+    protected BaseController(INotificationHandler<DomainNotification> notifications,
                                  IUser user,
-                                 IBus bus)
+                                 IMediatorHandler mediator)
     {
-      _notifications = notifications;
+      _notifications = (DomainNotificationHandler)notifications;
       //_mediator = mediator;
-        _bus = bus;
+      _mediator = mediator;
       if (user.IsAuthenticated())
       {
         ColaboradorId = user.GetUserId();
@@ -66,8 +65,7 @@ namespace Proj4Me.Services.Api.Controllers
 
     protected void NotificarErro(string codigo, string mensagem)
     {
-      _bus.RaiseEvent(new DomainNotification(codigo, mensagem));
-      //_mediator.PublicarEvento(new DomainNotification(codigo, mensagem));
+      _mediator.PublicarEvento(new DomainNotification(codigo, mensagem));
     }
 
     protected void AdicionarErrosIdentity(IdentityResult result)

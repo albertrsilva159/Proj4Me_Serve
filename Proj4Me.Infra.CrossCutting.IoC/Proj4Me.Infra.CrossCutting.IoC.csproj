@@ -8,13 +8,12 @@
     <PackageReference Include="AutoMapper" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Proj4Me.Application\Proj4Me.Application.csproj" />
     <ProjectReference Include="..\Proj4Me.Domain\Proj4Me.Domain.csproj" />
     <ProjectReference Include="..\Proj4Me.Infra.CrossCutting.AspNetFilters\Proj4Me.Infra.CrossCutting.AspNetFilters.csproj" />
-    <ProjectReference Include="..\Proj4Me.Infra.CrossCutting.Bus\Proj4Me.Infra.CrossCutting.Bus.csproj" />
     <ProjectReference Include="..\Proj4Me.Infra.CrossCutting.Identity\Proj4Me.Infra.CrossCutting.Identity.csproj" />
     <ProjectReference Include="..\Proj4Me.Infra.Data\Proj4Me.Infra.Data.csproj" />
   </ItemGroup>

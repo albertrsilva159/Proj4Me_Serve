@@ -1,38 +1,42 @@
-﻿using Proj4Me.Domain.Core.Events;
-using Proj4Me.Domain.CommandHandlers;
+﻿using Proj4Me.Domain.Handlers;
 using Proj4Me.Domain.ProjetosAreaServicos.Repository;
 using Proj4Me.Domain.Interfaces;
 using System;
-using Proj4Me.Domain.Core.Bus;
 using Proj4Me.Domain.ProjetosAreaServicos.Events;
 using Proj4Me.Domain.Core.Notification;
+using MediatR;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
 {
   public class ProjetoAreaServicoCommandHandler : CommandHandler,
-      IHandler<RegistrarProjetoAreaServicoCommand>,
-      IHandler<AtualizarProjetoAreaServicoCommand>,
-      IHandler<ExcluirProjetoAreaServicoCommand>
+      IRequestHandler<RegistrarProjetoAreaServicoCommand>,
+      IRequestHandler<AtualizarProjetoAreaServicoCommand>,
+      IRequestHandler<ExcluirProjetoAreaServicoCommand>
   {
 
     private readonly IProjetoAreaServicoRepository _projetoAreaServicoRepository;
-    private readonly IBus _bus;
-    public ProjetoAreaServicoCommandHandler(IProjetoAreaServicoRepository projetoAreaServicoRepository
-                                           , IUnitOfWork uow
-                                           , IBus bus
-                                           , IDomainNotificationHandler<DomainNotification> notificcation) : base(uow, bus, notificcation)
+    private readonly IMediatorHandler _mediator;
+    private readonly IUser _user;
+    public ProjetoAreaServicoCommandHandler(IProjetoAreaServicoRepository projetoAreaServicoRepository,
+                                            IUnitOfWork uow,
+                                            IUser user,
+                                            INotificationHandler<DomainNotification> notifications,
+                                            IMediatorHandler mediator) : base(uow, mediator, notifications)
     {
       _projetoAreaServicoRepository = projetoAreaServicoRepository;
-      _bus = bus;
+      _user = user;
+      _mediator = mediator;
     }
 
-    public void Handle(RegistrarProjetoAreaServicoCommand message)
+    public Task<Unit> Handle(RegistrarProjetoAreaServicoCommand message, CancellationToken cancellationToken)
     {
       //ar projeto = new ProjetoAreaServico(message.Nome,message.Descricao);
       //var cliente = new Cliente(message.Cliente.Id, message.Cliente.Nome, message.Id);
       var projeto = ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, message.ColaboradorId, message.PerfilId);
 
-      if (!ProjetoAreaServicoValido(projeto)) return;
+      if (!ProjetoAreaServicoValido(projeto)) return (Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
 
 
       // persistencia
@@ -42,38 +46,44 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
       {
         //notificar um processo concluido
         Console.WriteLine("Evento registrado com sucesso!");
-        _bus.RaiseEvent(new ProjetoAreaServicoRegistradoEvent(projeto.Id, projeto.Nome, projeto.Descricao));
+        _mediator.PublicarEvento(new ProjetoAreaServicoRegistradoEvent(projeto.Id, projeto.Nome, projeto.Descricao));
       }
+
+      return (Task<Unit>)Task.CompletedTask; ///Task.FromResult(Unit.Value);
 
     }
 
-    public void Handle(AtualizarProjetoAreaServicoCommand message)
+    public Task<Unit> Handle(AtualizarProjetoAreaServicoCommand message, CancellationToken cancellationToken)
     {
       var eventoAtual = _projetoAreaServicoRepository.GetById(message.Id);
-      if (!EventoExistente(message.Id, message.MessageType)) return;
+      if (!EventoExistente(message.Id, message.MessageType)) return Task.FromResult(Unit.Value);
 
       var projeto = ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, message.ColaboradorId, eventoAtual.PerfilId);
 
-      if (!ProjetoAreaServicoValido(projeto)) return;
+      if (!ProjetoAreaServicoValido(projeto)) return (Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
 
       _projetoAreaServicoRepository.Update(projeto);
 
       if (Commit())
       {
-        _bus.RaiseEvent(new ProjetoAreaServicoAtualizadoEvent(projeto.Id, projeto.Nome, projeto.Descricao));
+        _mediator.PublicarEvento((new ProjetoAreaServicoAtualizadoEvent(projeto.Id, projeto.Nome, projeto.Descricao)));
       }
+
+      return (Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
     }
 
-    public void Handle(ExcluirProjetoAreaServicoCommand message)
+    public Task<Unit> Handle(ExcluirProjetoAreaServicoCommand message, CancellationToken cancellationToken)
     {
-      if (!EventoExistente(message.Id, message.MessageType)) return;
+      if (!EventoExistente(message.Id, message.MessageType)) return (Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
 
       _projetoAreaServicoRepository.Remover(message.Id);
 
       if (Commit())
       {
-        _bus.RaiseEvent(new ProjetoAreaServicoExcluidoEvent(message.Id));
+        _mediator.PublicarEvento((new ProjetoAreaServicoExcluidoEvent(message.Id)));
       }
+
+      return (Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
 
     }
 
@@ -93,9 +103,10 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
 
       if (projeto != null) return true;
 
-      _bus.RaiseEvent(new DomainNotification(messageType, "Evento não encontrado."));
+      _mediator.PublicarEvento((new DomainNotification(messageType, "Evento não encontrado.")));
       return false;
     }
+
 
   }
 }

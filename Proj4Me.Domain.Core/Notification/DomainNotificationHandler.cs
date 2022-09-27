@@ -1,12 +1,14 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Proj4Me.Domain.Core.Notification
 {
-  public class DomainNotificationHandler : IDomainNotificationHandler<DomainNotification>
+  public class DomainNotificationHandler : INotificationHandler<DomainNotification>
   {
     private List<DomainNotification> _notifications;
 
@@ -19,11 +21,13 @@ namespace Proj4Me.Domain.Core.Notification
       return _notifications;
     }
 
-    public void Handle(DomainNotification message)
+    public Task Handle(DomainNotification message, CancellationToken cancellationToken)
     {
       _notifications.Add(message);
       Console.ForegroundColor = ConsoleColor.Red;
       Console.WriteLine($"Erro: {message.Key} - {message.Value}");
+
+      return Task.CompletedTask;
     }
 
     public bool HasNotifications()
@@ -35,5 +39,6 @@ namespace Proj4Me.Domain.Core.Notification
     {
       _notifications = new List<DomainNotification>();
     }
+
   }
 }

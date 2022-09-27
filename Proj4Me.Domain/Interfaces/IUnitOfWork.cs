@@ -5,7 +5,7 @@ namespace Proj4Me.Domain.Interfaces
 {
   public interface IUnitOfWork : IDisposable
   {
-    CommandResponse Commit();
+    bool Commit();
 
   }
 }
