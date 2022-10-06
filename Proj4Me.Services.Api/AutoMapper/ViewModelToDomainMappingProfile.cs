@@ -30,7 +30,7 @@ namespace Proj4Me.Services.Api.AutoMapper
       ////COLABORADOR
 
       CreateMap<ColaboradorViewModel, RegistrarColaboradorCommand>()
-          .ConstructUsing(c => new RegistrarColaboradorCommand(c.Nome, c.Email));
+          .ConstructUsing(c => new RegistrarColaboradorCommand(c.Id, c.Nome, c.Email));
 
       CreateMap<ColaboradorViewModel, AtualizarColaboradorCommand>()
         .ConstructUsing(c => new AtualizarColaboradorCommand(c.Id, c.Nome, c.Email));
