@@ -25,6 +25,7 @@ using Proj4Me.Infra.CrossCutting.AspNetFilters;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Proj4Me.Domain.Handlers;
+using System.Reflection;
 
 namespace Proj4Me.Infra.CrossCutting.IoC
 {
@@ -34,13 +35,14 @@ namespace Proj4Me.Infra.CrossCutting.IoC
     {
       //ASPNET
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      ///////////////services.AddSingleton(Mapper.Configuration);
-      //services.AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<IConfigurationProvider>(), sp.GetService));
+      ///services.AddSingleton(Mapper.Configuration);
+      services.AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<IConfigurationProvider>(), sp.GetService));
 
 
       // Domain Bus (Mediator)
       services.AddScoped(typeof(Mediator));
       services.AddScoped<IMediatorHandler, MediatorHandler>();
+      
 
       ///Entao para cada comando ele vai chamar o CommandHandler
       //DOMAIN Commands
@@ -48,7 +50,7 @@ namespace Proj4Me.Infra.CrossCutting.IoC
       services.AddScoped<IRequestHandler<AtualizarProjetoAreaServicoCommand>, ProjetoAreaServicoCommandHandler>();
       services.AddScoped<IRequestHandler<ExcluirProjetoAreaServicoCommand>, ProjetoAreaServicoCommandHandler>();
 
-      services.AddScoped<IRequestHandler<RegistrarColaboradorCommand>, ColaboradorCommandHandler>();
+      services.AddScoped<IRequestHandler<RegistrarColaboradorCommand, Unit>, ColaboradorCommandHandler>();
       services.AddScoped<IRequestHandler<AtualizarColaboradorCommand>, ColaboradorCommandHandler>();
       services.AddScoped<IRequestHandler<ExcluirColaboradorCommand>, ColaboradorCommandHandler>();
 
@@ -81,7 +83,7 @@ namespace Proj4Me.Infra.CrossCutting.IoC
       services.AddScoped<IUnitOfWork, UnitOfWork>();
 
       // nao tem interface porque o context nao dipoe de interface
-      services.AddSingleton<ProjetoAreaServicoContext>();
+      services.AddScoped<ProjetoAreaServicoContext>();
       //services.AddScoped<ProjetoAreaServicoContext>();
 
       // Infra - Identity

@@ -17,19 +17,19 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Events
     public Task Handle(ProjetoAreaServicoExcluidoEvent messag, CancellationToken cancellationTokene)
     {
       // TODO: Disparar alguma ação
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.CompletedTask;
     }
 
     public Task Handle(ProjetoAreaServicoAtualizadoEvent message, CancellationToken cancellationToken)
     {
       // TODO: Disparar alguma ação
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.CompletedTask;
     }
 
     public Task Handle(ProjetoAreaServicoRegistradoEvent message, CancellationToken cancellationToken)
     {
       // TODO: Disparar alguma ação
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.CompletedTask;
     }
   }
 }

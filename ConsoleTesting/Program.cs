@@ -1,5 +1,4 @@
-﻿using Proj4Me.Domain.Core.Bus;
-using Proj4Me.Domain.Core.Commands;
+﻿using Proj4Me.Domain.Core.Commands;
 using Proj4Me.Domain.Core.Events;
 using Proj4Me.Domain.Core.Notification;
 using Proj4Me.Domain.Interfaces;

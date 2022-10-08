@@ -12,20 +12,20 @@ namespace Proj4Me.Domain.Colaboradores.Events
     public Task Handle(ColaboradorExcluidoEvent message, CancellationToken cancellationTokene)
     {
       // TODO: Disparar alguma ação
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.CompletedTask;
 
     }
 
     public Task Handle(ColaboradorAtualizadoEvent message, CancellationToken cancellationTokene)
     {
       // TODO: Disparar alguma ação
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.CompletedTask;
     }
 
     public Task Handle(ColaboradorRegistradoEvent message, CancellationToken cancellationTokene)
     {
       // TODO: Disparar alguma ação
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.CompletedTask;
     }
   }
 }

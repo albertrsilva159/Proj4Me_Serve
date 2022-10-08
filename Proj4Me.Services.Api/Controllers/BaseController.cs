@@ -5,10 +5,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Proj4Me.Domain.Core.Notification;
-
+using Microsoft.AspNetCore.Cors;
 
 namespace Proj4Me.Services.Api.Controllers
 {
+  
   [Produces("application/json")]
   public abstract class BaseController : Controller
   {

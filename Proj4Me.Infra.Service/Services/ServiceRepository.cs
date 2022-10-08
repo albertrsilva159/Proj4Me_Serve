@@ -77,6 +77,24 @@ namespace Proj4Me.Infra.Service.Services
       return listaPorProjetos;
     }
 
+    public List<ProjetoProj4Me> ListarProjetoEspecifico(string indexProjeto)
+    {
+      List<ProjetoProj4Me> listaPorProjetos = new List<ProjetoProj4Me>();
+      using (HttpClient client = new HttpClient())
+      {
+        //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _token);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+        var req = new HttpRequestMessage(HttpMethod.Get, _URLPROJ4ME + indexProjeto);
+
+        HttpResponseMessage resp = client.SendAsync(req).Result;
+        var result = resp.Content.ReadAsStringAsync();
+
+        listaPorProjetos = JsonConvert.DeserializeObject<List<ProjetoProj4Me>>(result.Result) as List<ProjetoProj4Me>;
+        //var testee = convert.Where(x => x.index < 3);
+      }
+      return listaPorProjetos;
+    }
+
     public List<TarefaProj4Me> ListarTasksProjeto(int codProjeto)
     {
       List<TarefaProj4Me> listaTasksPorProjeto = new List<TarefaProj4Me>();
@@ -119,5 +137,6 @@ namespace Proj4Me.Infra.Service.Services
       }
       return tarefaEsforco;
     }
+  
   }
 }

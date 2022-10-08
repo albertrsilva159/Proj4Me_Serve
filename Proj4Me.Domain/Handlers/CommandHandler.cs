@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentValidation.Results;
 using MediatR;
-using Proj4Me.Domain.Core.Bus;
 using Proj4Me.Domain.Core.Notification;
 using Proj4Me.Domain.Interfaces;
 

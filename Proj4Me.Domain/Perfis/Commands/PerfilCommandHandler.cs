@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Proj4Me.Domain.Handlers;
-using Proj4Me.Domain.Core.Bus;
 using Proj4Me.Domain.Core.Events;
 using Proj4Me.Domain.Core.Notification;
 using Proj4Me.Domain.Handlers;

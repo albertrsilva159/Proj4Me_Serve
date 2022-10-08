@@ -31,7 +31,7 @@ namespace Proj4Me.Domain.Colaboradores.Commands
     {
       var colaborador = new Colaborador(message.Id, message.Nome, message.Email);
 
-      if (!ColaboradorValido(colaborador)) return (Task<Unit>)Task.CompletedTask;
+      if (!ColaboradorValido(colaborador)) return Task.FromResult(Unit.Value);  //return (Task<Unit>)Task.CompletedTask;
 
       // persistencia
       _colaboradorRepository.Add(colaborador);
@@ -42,8 +42,8 @@ namespace Proj4Me.Domain.Colaboradores.Commands
         Console.WriteLine("Colaborador registrado com sucesso!");
         _mediator.PublicarEvento(new ColaboradorRegistradoEvent(colaborador.Id, colaborador.Nome, colaborador.Email));
       }
-
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.FromResult(Unit.Value);
+      //return (Task<Unit>)Task.CompletedTask;
     }
 
     public Task<Unit> Handle(AtualizarColaboradorCommand message, CancellationToken cancellationToken)
@@ -53,7 +53,7 @@ namespace Proj4Me.Domain.Colaboradores.Commands
 
       var colaborador = new Colaborador(message.Id, message.Nome, message.Email);
 
-      if (!ColaboradorValido(colaborador)) return (Task<Unit>)Task.CompletedTask;
+      if (!ColaboradorValido(colaborador)) return Task.FromResult(Unit.Value);
 
       _colaboradorRepository.Update(colaborador);
 
@@ -62,12 +62,12 @@ namespace Proj4Me.Domain.Colaboradores.Commands
         _mediator.PublicarEvento(new ColaboradorAtualizadoEvent(colaborador.Id, colaborador.Nome, colaborador.Email));
       }
 
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.FromResult(Unit.Value);
     }
 
     public Task<Unit> Handle(ExcluirColaboradorCommand message, CancellationToken cancellationToken)
     {
-      if (!ColaboradorExistente(message.Id, message.MessageType)) return (Task<Unit>)Task.CompletedTask;
+      if (!ColaboradorExistente(message.Id, message.MessageType)) return Task.FromResult(Unit.Value);
 
       _colaboradorRepository.Remover(message.Id);
 
@@ -76,7 +76,7 @@ namespace Proj4Me.Domain.Colaboradores.Commands
         _mediator.PublicarEvento(new ColaboradorExcluidoEvent(message.Id));
       }
 
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.FromResult(Unit.Value);
     }
 
     private bool ColaboradorValido(Colaborador colaborador)

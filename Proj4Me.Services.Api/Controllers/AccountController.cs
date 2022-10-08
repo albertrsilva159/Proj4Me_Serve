@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Proj4Me.Domain.Colaboradores.Repository;
 using Proj4Me.Domain.Core.Notification;
-using Proj4Me.Domain.Core.Bus;
 using Proj4Me.Infra.CrossCutting.Identity.Authorization;
 using Microsoft.Extensions.Options;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
@@ -25,20 +24,23 @@ using System.Text;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using MediatR;
+using Microsoft.AspNetCore.Cors;
 
 namespace Proj4Me.Services.Api.Controllers
 {
+
+
   public class AccountController : BaseController
   {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ILogger _logger;
-    private readonly IBus _bus;
     private readonly IConfiguration _configuration;
     private readonly IMediatorHandler _mediator;
     private readonly TokenDescriptor _tokenDescriptor;
     //private readonly JwtTokenOptions _jwtTokenOptions;
-    
+
+
     public AccountController(
                 UserManager<ApplicationUser> userManager,
                 SignInManager<ApplicationUser> signInManager,
@@ -66,9 +68,12 @@ namespace Proj4Me.Services.Api.Controllers
     => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
 
 
-    [HttpPost]
+    
+   
+    //[EnableCors("CorsApi")]
     [AllowAnonymous]
     [Route("nova-conta")]
+    [HttpPost]
     public async Task<IActionResult> Register([FromBody] RegisterViewModel model, int version)
     {
       if (version == 2)
@@ -91,7 +96,7 @@ namespace Proj4Me.Services.Api.Controllers
         await _userManager.AddClaimAsync(user, new Claim("Projetos", "Ler"));
         await _userManager.AddClaimAsync(user, new Claim("Projetos", "Gravar"));
 
-        var registroCommand = new RegistrarColaboradorCommand(model.Nome, user.Email);
+        var registroCommand = new RegistrarColaboradorCommand(Guid.Parse(user.Id),model.Nome, user.Email);
         await _mediator.EnviarComando(registroCommand);
 
         if (!OperacaoValida())
@@ -102,7 +107,8 @@ namespace Proj4Me.Services.Api.Controllers
 
         _logger.LogInformation(1, "Usuario criado com sucesso!");
 
-        var response = GerarTokenUsuario(new LoginViewModel { Email = model.Email, Password = model.Password });
+        var response = await GerarTokenUsuario(new LoginViewModel { Email = model.Email, Password = model.Password, RememberMe = false});
+       
         return Response(response);
         
       }
@@ -139,7 +145,7 @@ namespace Proj4Me.Services.Api.Controllers
     {
       foreach (var erro in result.Errors)
       {
-        _bus.RaiseEvent(new DomainNotification(result.ToString(), erro.Description));
+        NotificarErro(result.ToString(), erro.Description);
       }
     }
     private string generateJwtToken(LoginViewModel login)
@@ -205,7 +211,13 @@ namespace Proj4Me.Services.Api.Controllers
       {
         access_token = encodedJwt,
         expires_in = DateTime.Now.AddMinutes(_tokenDescriptor.MinutesValid),///(int)_jwtTokenOptions.ValidFor.TotalSeconds,// informa quantos segundos vai expirar
-        user = user
+        user = new
+        {
+          id = user.Id,
+          nome = user.UserName,
+          email = user.Email,
+          claims = userClaims.Select(c => new { c.Type, c.Value })
+        }
       };
 
       return response;
