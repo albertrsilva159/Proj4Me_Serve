@@ -26,12 +26,12 @@ namespace Proj4Me.Services.Api.ViewModels
 
     ///public ClienteViewModel Cliente { get; set; }
 
-    public PerfilViewModel Perfil { get; set; }
+    //public PerfilViewModel Perfil { get; set; }
 
-    public ColaboradorViewModel Colaborador { get; set; }
+    //public ColaboradorViewModel Colaborador { get; set; }
 
     //public Guid ClienteId { get; set; }
-    [Required(ErrorMessage = "Perfil deve ser informado")]
+    ////////////////////////////[Required(ErrorMessage = "Perfil deve ser informado")]
     public Guid PerfilId { get; set; }
     [Required(ErrorMessage = "Colaborador deve ser informado")]
     public Guid ColaboradorId { get; set; }

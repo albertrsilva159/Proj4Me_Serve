@@ -42,6 +42,7 @@ namespace Proj4Me.Infra.CrossCutting.IoC
       // Domain Bus (Mediator)
       services.AddScoped(typeof(Mediator));
       services.AddScoped<IMediatorHandler, MediatorHandler>();
+      
 
       ///Entao para cada comando ele vai chamar o CommandHandler
       //DOMAIN Commands

@@ -9,6 +9,10 @@ using Dapper;
 using Proj4Me.Domain.Colaboradores;
 using Proj4Me.Domain.Perfis;
 using Proj4Me.Infra.Service.Interfaces;
+using System.Collections;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Proj4Me.Domain.Core.Events;
+using Proj4Me.Infra.Service.Model;
 
 namespace Proj4Me.Infra.Data.Repository
 {
@@ -24,11 +28,26 @@ namespace Proj4Me.Infra.Data.Repository
     public override IEnumerable<ProjetoAreaServico> GetAll()
     {
       var teste = _serviceRepository.GerarToken();
-      var sql3 = "select * " +
-                  "from ProjetoAreaServico proj " +
-                  "inner join colaborador col on col.Id = proj.ColaboradorId " +
-                  "inner join perfil per on per.Id = proj.PerfilId ";
+      List<ProjetoProj4Me> todosProjetosProj4Me = _serviceRepository.ListarProjetos();
 
+      //foreach (var projeto in todosProjetosProj4Me)
+      //{
+      //  var projetoEspecifico = _serviceRepository.ListarProjetoEspecifico(projeto.index);
+
+      //}
+
+      
+
+      var retorno = todosProjetosProj4Me.Select(p => ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(Guid.NewGuid(), p.title, p.title, null, null));
+
+      var listaVindaProj4Me = retorno;
+
+      return listaVindaProj4Me;
+
+      var sql3 = "select * " +
+      "from ProjetoAreaServico proj " +
+      "inner join colaborador col on col.Id = proj.ColaboradorId " +
+      "inner join perfil per on per.Id = proj.PerfilId ";
       return Db.Database.GetDbConnection().Query<ProjetoAreaServico, Colaborador, Perfil, ProjetoAreaServico>(sql3, (proj, col, per) =>
       {
         proj.AtribuirColaborador(col);

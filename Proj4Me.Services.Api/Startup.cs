@@ -16,6 +16,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Reflection;
 using Microsoft.AspNetCore.Server.IISIntegration;
+using Proj4Me.Services.Api.AutoMapper;
+using Proj4Me.Domain.Handlers;
+using Proj4Me.Domain.Interfaces;
 
 namespace Proj4Me.Services.Api
 {
@@ -157,15 +160,19 @@ namespace Proj4Me.Services.Api
       services.AddApiVersioning("api/v{version}");
 
       // AutoMapper
+      
       services.AddAutoMapper(typeof(Startup));
 
       // Configurações do Swagger
       services.AddSwaggerConfig();
 
       // MediatR
-      services.AddMediatR(typeof(Startup));
-
-
+      //services.AddMediatR(typeof(Startup));
+      services.AddMediatR(typeof(MediatorHandler));
+     // services.AddMediatR(Assembly.GetExecutingAssembly());
+     // services.AddScoped<IMediatorHandler, MediatorHandler>();
+  
+      //services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
       // Registrar todos os DI
       services.AddDIConfiguration();
     }

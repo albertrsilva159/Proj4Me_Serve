@@ -30,13 +30,13 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
       _mediator = mediator;
     }
 
-    public Task<Unit> Handle(RegistrarProjetoAreaServicoCommand message, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RegistrarProjetoAreaServicoCommand message, CancellationToken cancellationToken)
     {
       //ar projeto = new ProjetoAreaServico(message.Nome,message.Descricao);
       //var cliente = new Cliente(message.Cliente.Id, message.Cliente.Nome, message.Id);
-      var projeto = ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, message.ColaboradorId, message.PerfilId);
+      var projeto =  ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, message.ColaboradorId, message.PerfilId);
 
-      if (!ProjetoAreaServicoValido(projeto)) return (Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
+      if (!ProjetoAreaServicoValido(projeto)) return  Unit.Value;  //Task.FromResult(Unit.Value);
 
 
       // persistencia
@@ -46,44 +46,44 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
       {
         //notificar um processo concluido
         Console.WriteLine("Evento registrado com sucesso!");
-        _mediator.PublicarEvento(new ProjetoAreaServicoRegistradoEvent(projeto.Id, projeto.Nome, projeto.Descricao));
+       await  _mediator.PublicarEvento(new ProjetoAreaServicoRegistradoEvent(projeto.Id, projeto.Nome, projeto.Descricao));
       }
 
-      return (Task<Unit>)Task.CompletedTask; ///Task.FromResult(Unit.Value);
+      return  Unit.Value; ///Task.FromResult("ok");// (Task<Unit>)Task.CompletedTask; ///Task.FromResult(Unit.Value);
 
     }
 
-    public Task<Unit> Handle(AtualizarProjetoAreaServicoCommand message, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(AtualizarProjetoAreaServicoCommand message, CancellationToken cancellationToken)
     {
       var eventoAtual = _projetoAreaServicoRepository.GetById(message.Id);
-      if (!EventoExistente(message.Id, message.MessageType)) return Task.FromResult(Unit.Value);
+      if (!EventoExistente(message.Id, message.MessageType)) return Unit.Value;// Task.FromResult(Unit.Value);
 
       var projeto = ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, message.ColaboradorId, eventoAtual.PerfilId);
 
-      if (!ProjetoAreaServicoValido(projeto)) return (Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
+      if (!ProjetoAreaServicoValido(projeto)) return Unit.Value; //Task.FromResult(Unit.Value);
 
       _projetoAreaServicoRepository.Update(projeto);
 
       if (Commit())
       {
-        _mediator.PublicarEvento((new ProjetoAreaServicoAtualizadoEvent(projeto.Id, projeto.Nome, projeto.Descricao)));
+        await _mediator.PublicarEvento((new ProjetoAreaServicoAtualizadoEvent(projeto.Id, projeto.Nome, projeto.Descricao)));
       }
 
-      return (Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
+      return Unit.Value; //Task.FromResult(Unit.Value);
     }
 
-    public Task<Unit> Handle(ExcluirProjetoAreaServicoCommand message, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ExcluirProjetoAreaServicoCommand message, CancellationToken cancellationToken)
     {
-      if (!EventoExistente(message.Id, message.MessageType)) return (Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
+      if (!EventoExistente(message.Id, message.MessageType)) return Unit.Value;//(Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
 
-      _projetoAreaServicoRepository.Remover(message.Id);
+       _projetoAreaServicoRepository.Remover(message.Id);
 
       if (Commit())
       {
-        _mediator.PublicarEvento((new ProjetoAreaServicoExcluidoEvent(message.Id)));
+        await _mediator.PublicarEvento((new ProjetoAreaServicoExcluidoEvent(message.Id)));
       }
 
-      return (Task<Unit>)Task.CompletedTask; //Task.FromResult(Unit.Value);
+      return Unit.Value; //Task.FromResult(Unit.Value);
 
     }
 
