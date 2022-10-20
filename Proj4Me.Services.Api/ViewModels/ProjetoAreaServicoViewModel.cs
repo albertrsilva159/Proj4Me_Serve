@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Proj4Me.Domain.ProjetosAreaServicos;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Proj4Me.Services.Api.ViewModels
@@ -14,6 +16,7 @@ namespace Proj4Me.Services.Api.ViewModels
 
     [Key]
     public Guid Id { get; set; }
+    public long Index { get; set; }
 
     [Required(ErrorMessage = "Nome é requerido")]
     [MinLength(2, ErrorMessage = "Tamanho minimo requerido 2")]
@@ -23,6 +26,18 @@ namespace Proj4Me.Services.Api.ViewModels
 
     [Display(Name = "Descricao do projeto")]
     public string Descricao { get; set; }
+    public DateTime Registro { get; private set; }
+    public string Cliente { get; set; }
+    public Guid PerfilId { get; set; }
+    [Required(ErrorMessage = "Colaborador deve ser informado")]
+    public Guid ColaboradorId { get; set; }
+    public DateTime? DataInicio { get; set; }
+    public ICollection<TarefaViewModel> Tarefas { get; set; }
+   
+
+
+    public List<TarefaViewModel> ListaTarefas { get; set; } 
+
 
     ///public ClienteViewModel Cliente { get; set; }
 
@@ -32,9 +47,7 @@ namespace Proj4Me.Services.Api.ViewModels
 
     //public Guid ClienteId { get; set; }
     ////////////////////////////[Required(ErrorMessage = "Perfil deve ser informado")]
-    public Guid PerfilId { get; set; }
-    [Required(ErrorMessage = "Colaborador deve ser informado")]
-    public Guid ColaboradorId { get; set; }
+  
 
 
 

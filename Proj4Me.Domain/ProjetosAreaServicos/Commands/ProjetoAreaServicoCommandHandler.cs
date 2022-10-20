@@ -7,6 +7,7 @@ using Proj4Me.Domain.Core.Notification;
 using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
 {
@@ -34,7 +35,7 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
     {
       //ar projeto = new ProjetoAreaServico(message.Nome,message.Descricao);
       //var cliente = new Cliente(message.Cliente.Id, message.Cliente.Nome, message.Id);
-      var projeto =  ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, message.ColaboradorId, message.PerfilId);
+      var projeto =  ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, string.Empty, message.ColaboradorId, message.PerfilId, null);
 
       if (!ProjetoAreaServicoValido(projeto)) return  Unit.Value;  //Task.FromResult(Unit.Value);
 
@@ -58,8 +59,8 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
       var eventoAtual = _projetoAreaServicoRepository.GetById(message.Id);
       if (!EventoExistente(message.Id, message.MessageType)) return Unit.Value;// Task.FromResult(Unit.Value);
 
-      var projeto = ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, message.ColaboradorId, eventoAtual.PerfilId);
-
+      var projeto = ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, string.Empty, message.ColaboradorId, eventoAtual.PerfilId, null);
+                                                                                      
       if (!ProjetoAreaServicoValido(projeto)) return Unit.Value; //Task.FromResult(Unit.Value);
 
       _projetoAreaServicoRepository.Update(projeto);

@@ -208,7 +208,7 @@ namespace Proj4Me.Services.Api
       //});
       app.UseAuthentication();
       app.UseAuthorization();
-
+      
       app.UseSwagger();
       app.UseSwaggerUI(s =>
       {

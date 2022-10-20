@@ -77,9 +77,9 @@ namespace Proj4Me.Infra.Service.Services
       return listaPorProjetos;
     }
 
-    public List<ProjetoProj4Me> ListarProjetoEspecifico(string indexProjeto)
+    public ProjetoProj4Me ProjetoPorIndex(long indexProjeto)
     {
-      List<ProjetoProj4Me> listaPorProjetos = new List<ProjetoProj4Me>();
+      ProjetoProj4Me Projeto = new ProjetoProj4Me();
       using (HttpClient client = new HttpClient())
       {
         //client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _token);
@@ -89,13 +89,13 @@ namespace Proj4Me.Infra.Service.Services
         HttpResponseMessage resp = client.SendAsync(req).Result;
         var result = resp.Content.ReadAsStringAsync();
 
-        listaPorProjetos = JsonConvert.DeserializeObject<List<ProjetoProj4Me>>(result.Result) as List<ProjetoProj4Me>;
+        Projeto = JsonConvert.DeserializeObject<ProjetoProj4Me>(result.Result) ;
         //var testee = convert.Where(x => x.index < 3);
       }
-      return listaPorProjetos;
+      return Projeto;
     }
 
-    public List<TarefaProj4Me> ListarTasksProjeto(int codProjeto)
+    public List<TarefaProj4Me> ListarTasksProjeto(long codProjeto)
     {
       List<TarefaProj4Me> listaTasksPorProjeto = new List<TarefaProj4Me>();
       using (HttpClient client = new HttpClient())
@@ -116,7 +116,7 @@ namespace Proj4Me.Infra.Service.Services
       return listaTasksPorProjeto;
     }
 
-    public List<TarefaEsforcoProj4Me> BuscarEsforcoEComentarioTasksProjeto(int codProjeto, int codtask)
+    public List<TarefaEsforcoProj4Me> BuscarEsforcoEComentarioTasksProjeto(long codProjeto, long codtask)
     {
       List<TarefaEsforcoProj4Me> tarefaEsforco = new List<TarefaEsforcoProj4Me>();
 
@@ -137,6 +137,7 @@ namespace Proj4Me.Infra.Service.Services
       }
       return tarefaEsforco;
     }
-  
+
+
   }
 }

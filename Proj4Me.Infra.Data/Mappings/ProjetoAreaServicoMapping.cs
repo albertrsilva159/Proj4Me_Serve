@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Proj4Me.Domain.ProjetosAreaServicos;
 using Proj4Me.Infra.Data.Extensions;
+using System.Reflection.Emit;
 
 namespace Proj4Me.Infra.Data.Mappings
 {
@@ -34,6 +35,10 @@ namespace Proj4Me.Infra.Data.Mappings
       builder.HasOne(c => c.Perfil)
         .WithMany(p => p.ProjetoAreaServico)
         .HasForeignKey(c => c.PerfilId);
+
+      builder.HasMany(p => p.Tarefas)
+        .WithOne(c => c.ProjetoAreaServico);
+
     }
   }
 }

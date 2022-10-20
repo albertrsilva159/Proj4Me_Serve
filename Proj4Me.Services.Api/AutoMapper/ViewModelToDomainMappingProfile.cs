@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Proj4Me.Domain.Colaboradores.Commands;
 using Proj4Me.Domain.Perfis.Commands;
+using Proj4Me.Domain.ProjetosAreaServicos;
 using Proj4Me.Domain.ProjetosAreaServicos.Commands;
 using Proj4Me.Services.Api.ViewModels;
 using System;
+using System.Linq;
 
 namespace Proj4Me.Services.Api.AutoMapper
 {
@@ -15,6 +17,12 @@ namespace Proj4Me.Services.Api.AutoMapper
       //CreateMap<ProjetoAreaServicoViewModel, RegistrarProjetoAreaServicoCommand>()
       //    .ConstructUsing(c => new RegistrarProjetoAreaServicoCommand(c.Nome, c.Descricao, c.DescricaoLonga, c.ColaboradorId,
       //         new IncluirClienteProjetoAreaServicoCommand(c.Cliente.Id, c.Cliente.Nome, c.Id)));//id aqui é do projeto
+      //CreateMap< ProjetoAreaServicoViewModel[],ProjetoAreaServico[]>();
+      CreateMap<ProjetoAreaServicoViewModel, ProjetoAreaServico>();
+        //.ForMember(source => source.Tarefas, opt => opt.Ignore());
+          //.ForMember(source => source.ListaTarefas, opt => opt.MapFrom(cab => cab.ListaTarefas)).PreserveReferences(); 
+      //.ForMember(dest => dest.ListaTarefas, opt => opt.MapFrom(src => src.ListaTarefas.Where(x => x.NomeTarefa != null)));
+
       CreateMap<ProjetoAreaServicoViewModel, RegistrarProjetoAreaServicoCommand>()
     .ConstructUsing(c => new RegistrarProjetoAreaServicoCommand(c.Nome, c.Descricao, c.ColaboradorId, c.PerfilId));//id aqui é do projeto
 
