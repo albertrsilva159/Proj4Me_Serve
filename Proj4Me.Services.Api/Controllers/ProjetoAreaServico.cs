@@ -12,7 +12,9 @@ using Proj4Me.Services.Api.ViewModels;
 using Proj4Me.Domain.Colaboradores.Repository;
 using Proj4Me.Domain.Perfis.Repository;
 using Microsoft.AspNetCore.Cors;
-
+using System.Linq;
+using Microsoft.ApplicationInsights.AspNetCore;
+using System.Drawing;
 
 namespace Proj4Me.Services.Api.Controllers
 {
@@ -25,7 +27,7 @@ namespace Proj4Me.Services.Api.Controllers
     private readonly IMediatorHandler _mediator;
 
     public ProjetoAreaServico(INotificationHandler<DomainNotification> notifications,
-                             IUser user,                             
+                             IUser user,
                              IProjetoAreaServicoRepository projetoAreaServicoRepository,
                              IColaboradorRepository colaboradorRepository,
                              IPerfilRepository perfilRepository,
@@ -43,7 +45,7 @@ namespace Proj4Me.Services.Api.Controllers
     [Route("projetos")]
     //[Authorize(Policy = "Projetos:Gravar")]
     public IEnumerable<ProjetoAreaServicoViewModel> Get()
-    { 
+    {
       return _mapper.Map<IEnumerable<ProjetoAreaServicoViewModel>>(_projetoAreaServicoRepository.GetAll());
     }
 
@@ -79,17 +81,67 @@ namespace Proj4Me.Services.Api.Controllers
     public IEnumerable<PerfilViewModel> ObterPerfis()
     {
       var teste = _colaboradorRepository.GetAll();
-      var dd = _mapper.Map<IEnumerable<PerfilViewModel>>(_perfilRepository.GetAll());
-      return _mapper.Map<IEnumerable<PerfilViewModel>>(_perfilRepository.GetAll());
+      var dd = _mapper.Map<IList<PerfilViewModel>>(_perfilRepository.GetAll());
+      return _mapper.Map<IList<PerfilViewModel>>(_perfilRepository.GetAll());
     }
 
     [HttpGet]
     [AllowAnonymous]
     [Route("projetos/listar-projetos")]
     public IEnumerable<ProjetoAreaServicoViewModel> ListarProjetos()
-    { 
-      return _mapper.Map<IEnumerable<ProjetoAreaServicoViewModel>>(_projetoAreaServicoRepository.GetAll());   
+    {
+      return _mapper.Map<IEnumerable<ProjetoAreaServicoViewModel>>(_projetoAreaServicoRepository.GetAll());
     }
+
+    [HttpGet]
+    [AllowAnonymous]
+    ///[Route("projetos/filtrar-projeto/{idProjeto:guid, nome:string}")]
+    [Route("projetos/pesquisar-projeto")]
+    public List<ProjetoAreaServicoViewModel> PesquisarProjetos(string? index, string? dataInicial, string? dataFinal)
+    {
+
+      //var retornos = _projetoAreaServicoRepository.Get_All();
+      //var  personViews = Mapper.Map<List<ProjetoAreaServico>, List<ProjetoAreaServicoViewModel>>(retornos);
+
+
+
+      // List<ProjetoAreaServico> retornoss = new List<ProjetoAreaServico>();
+      //retornoss = (List<ProjetoAreaServico>)_projetoAreaServicoRepository.Get_All();
+      // List<ProjetoAreaServicoViewModel> peopelVM;
+      // peopelVM = retornoss.Select(Mapper.Map< List<ProjetoAreaServico>, List<ProjetoAreaServicoViewModel>>);
+
+
+
+      var retorno = _projetoAreaServicoRepository.Get_All();
+
+      var retornoMap = _mapper.Map<List<ProjetoAreaServicoViewModel>>(retorno);
+
+      return retornoMap;
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("projetos/listar-nomes-projetos")]
+    public List<DTO_ListaProjetos> ListarNomesProjetos()
+    {
+      //var retorno = _mapper.Map<IEnumerable<ProjetoAreaServicoViewModel>>(_projetoAreaServicoRepository.GetAll()).Select(x => new { key = x.Index, nome = x.Nome}).ToDictionary(keySelector: m => m.key, elementSelector: m => m.nome);
+      List<DTO_ListaProjetos> lista = new List<DTO_ListaProjetos>() {
+                                                                      new DTO_ListaProjetos { Chave = "1", Valor = "albert" },
+                                                                      new DTO_ListaProjetos { Chave = "2", Valor = "chitao" }
+                                                                     };
+      return lista;
+    }
+
+
+    //public List<ProjetoAreaServicoViewModel> ListarNomesProjetos()
+    //{
+    //  var retorno = _mapper.Map<List<ProjetoAreaServicoViewModel>>(_projetoAreaServicoRepository.ObterTodosNomesProjetos());
+    //  return retorno;
+    //}
+
+
+
+
 
     [HttpPost]
     [Route("projetos")]
@@ -106,7 +158,7 @@ namespace Proj4Me.Services.Api.Controllers
       var projetoCommand = _mapper.Map<RegistrarProjetoAreaServicoCommand>(projetoAreaServicoViewModel);
 
       _mediator.EnviarComando(projetoCommand);
-      
+
       return Response(projetoCommand);
     }
 

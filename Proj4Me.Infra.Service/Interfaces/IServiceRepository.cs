@@ -15,9 +15,9 @@ namespace Proj4Me.Infra.Service.Interfaces
   {
     public string GerarToken();
     public List<ProjetoProj4Me> ListarProjetos();
-    public List<ProjetoProj4Me> ListarProjetoEspecifico(string indexProjeto);
-    public List<TarefaProj4Me> ListarTasksProjeto(int codProjeto);
-    public List<TarefaEsforcoProj4Me> BuscarEsforcoEComentarioTasksProjeto(int codProjeto, int codtask);
+    public ProjetoProj4Me ProjetoPorIndex(long indexProjeto);
+    public List<TarefaProj4Me> ListarTasksProjeto(long codProjeto);
+    public List<TarefaEsforcoProj4Me> BuscarEsforcoEComentarioTasksProjeto(long codProjeto, long codtask);
 
 
 

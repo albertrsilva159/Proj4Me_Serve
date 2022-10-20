@@ -15,6 +15,8 @@ namespace Proj4Me.Services.Api.AutoMapper
       {
         ps.AddProfile(new DomainToViewModelMappingProfile());//dominio para viewmodel
         ps.AddProfile(new ViewModelToDomainMappingProfile());//viewmodel para comando
+        ps.AllowNullCollections = true;
+        ps.AllowNullDestinationValues = true;
       });
     }
   }

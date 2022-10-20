@@ -10,7 +10,7 @@ namespace Proj4Me.Infra.Service.Model
   public class Owner
   {
     public int id { get; set; }
-    public string name { get; set; }
+    public string name { get; set; }    
     public string businessEmail { get; set; }
   }
 
