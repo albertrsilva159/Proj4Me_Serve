@@ -21,15 +21,16 @@ namespace Proj4Me.Domain.Colaboradores
     //EF Propriedade de navegação onde um colaborador pode ter varios projetos por isso a coleção
     public virtual ICollection<ProjetoAreaServico> ProjetoAreaServico { get; set; } 
 
-    public string Nome { get;  private set; }
-    public string Email { get; private set; }
+    public string Nome { get;   set; }
+    public string Email { get;  set; }
+    public int IndexColaboradorProj4Me { get;  set; }
     public Guid? ColaboradorId { get; }
 
     public override bool EhValido()
     {
       RuleFor(c => c.Nome)
                 .NotEmpty().WithMessage("O nome do colaborador precisa ser fornecido")
-                .Length(2, 150).WithMessage("O Logradouro precisa ter entre 2 e 100 caracteres");
+                .Length(2, 150).WithMessage("O nome precisa ter entre 2 e 100 caracteres");
 
       ValidationResult = Validate(this);
 

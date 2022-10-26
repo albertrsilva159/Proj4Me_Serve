@@ -25,7 +25,7 @@ namespace Proj4Me.Infra.Service.Model
     public Leader Leader { get; set; }
 
     [JsonProperty("client")]
-    public Cliente Cliente { get; set; }
+    public Client Client { get; set; }
 
     [JsonProperty("startDate")]
     public DateTime? DataInicio { get; set; }
@@ -43,10 +43,10 @@ namespace Proj4Me.Infra.Service.Model
     public List<CustomField> CustomFields { get; set; }
   }
 
-  public partial class Cliente
+  public partial class Client
   {
     [JsonProperty("id")]
-    public long Id { get; set; }
+    public int IndexClienteProj4Me { get; set; }
 
     [JsonProperty("name")]
     public string Nome { get; set; }
@@ -70,7 +70,7 @@ namespace Proj4Me.Infra.Service.Model
   public partial class Leader
   {
     [JsonProperty("id")]
-    public long Id { get; set; }
+    public int IndexColaboradorProj4Me { get; set; }
 
     [JsonProperty("name")]
     public string Name { get; set; }

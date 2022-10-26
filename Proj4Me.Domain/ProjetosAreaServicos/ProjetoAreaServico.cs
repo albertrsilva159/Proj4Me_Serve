@@ -5,19 +5,19 @@ using Proj4Me.Domain.Colaboradores;
 using Proj4Me.Domain.Perfis;
 using System.Collections.Generic;
 using System.Linq;
+using Proj4Me.Domain.Clientes;
 
 namespace Proj4Me.Domain.ProjetosAreaServicos
 {
   public class ProjetoAreaServico : Entity<ProjetoAreaServico>
   {
    
-    public ProjetoAreaServico(string nome, string descricao, int index, string cliente)
+    public ProjetoAreaServico(string nome, int index)
     {
       Id = Guid.NewGuid();
       Nome = nome;
-      Descricao = descricao;
+      //Descricao = descricao;
       Index = index;
-      Cliente = cliente;
       //DataInicio = dataInicio;
      
     }
@@ -27,14 +27,15 @@ namespace Proj4Me.Domain.ProjetosAreaServicos
 
     public long Index { get; private set; }
     public string Nome { get; private set; }
-    public string Descricao { get; private set; }
+    //public string Descricao { get; private set; }
 
-    public DateTime Registro { get; private set; }
-    public string Cliente { get; private set; }
+    //public DateTime Registro { get; private set; }
 
     public Guid? PerfilId { get; private set; }
     public Guid? ColaboradorId { get; private set; }
+    public Guid? ClienteId { get; private set; }
     public DateTime? DataInicio { get; private set; }
+    public int IndexProjetoProj4Me { get; private set; }
     public List<Tarefa> ListaTarefas { get; set; } 
 
 
@@ -44,6 +45,7 @@ namespace Proj4Me.Domain.ProjetosAreaServicos
     // EF propriedades de navegacao
     public virtual Perfil Perfil { get; private set; }
     public virtual Colaborador Colaborador { get; private set; }
+    public virtual Cliente Cliente { get; private set; }
     public ICollection<Tarefa> Tarefas { get; set; }
 
 
@@ -104,14 +106,14 @@ namespace Proj4Me.Domain.ProjetosAreaServicos
 
     public static class ProjetoAreaServicoFactory
     {
-      public static ProjetoAreaServico NovoProjetoAreaServicoCompleto(Guid id, string nome, string descricao, string cliente, Guid? colaboradorId, Guid? perfilId, List<Tarefa>? tarefas)
+      public static ProjetoAreaServico NovoProjetoAreaServicoCompleto(Guid id, string nome, string descricao, string cliente, Guid? colaboradorId, Guid? perfilId, Guid? clienteId, List<Tarefa>? tarefas)
       {
         var projetoAreaServico = new ProjetoAreaServico()
         {
           Id = id,
           Nome = nome,
-          Descricao = descricao,
-          Cliente = cliente,
+         /// Descricao = descricao,
+          ClienteId = clienteId,
           ///DataInicio = dataInicio,
           PerfilId = perfilId,
           ColaboradorId = colaboradorId
@@ -137,13 +139,13 @@ namespace Proj4Me.Domain.ProjetosAreaServicos
         return projetoAreaServico;
       }
 
-      public static ProjetoAreaServico NovoProjetoAreaServicoBasico(string nome, long index, string? cliente, List<Tarefa> tarefas)
+      public static ProjetoAreaServico NovoProjetoAreaServicoBasico(string nome, long index, List<Tarefa> tarefas)
       {
         var projetoAreaServico = new ProjetoAreaServico()
         {
           Index = index,
           Nome = nome,
-          Cliente = cliente == null ? "" : cliente,
+          //Cliente = cliente == null ? null : cliente,
           Tarefas = tarefas != null ? tarefas.Select(x => x).ToList() : null
 
         };
@@ -165,6 +167,34 @@ namespace Proj4Me.Domain.ProjetosAreaServicos
 
         return projetoAreaServico;
       }
+
+      public static ProjetoAreaServico NovoProjetoAreaServico(int IndexProjetoProj4Me, string nome, Guid idCliente, Guid idColaborador)
+      {
+
+        var projetoAreaServico = new ProjetoAreaServico()
+        {
+          IndexProjetoProj4Me = IndexProjetoProj4Me,
+          Nome = nome,
+          ClienteId = idCliente,
+          ColaboradorId = idColaborador
+          //Cliente = cliente == null ? null : cliente,
+
+
+        };
+        //if (tarefas != null && tarefas.Count > 0)
+        //{
+        //  projetoAreaServico.ListaTarefas = tarefas.Select(c => new Tarefa
+        //  {
+        //    Index = c.Index,
+        //    NomeTarefa = c.NomeTarefa,
+        //    DataCriacao = c.DataCriacao,
+        //    DataInicio = c.DataInicio
+        //  }).ToList();
+        //}
+
+        return projetoAreaServico;
+      }
+
     }
 
 

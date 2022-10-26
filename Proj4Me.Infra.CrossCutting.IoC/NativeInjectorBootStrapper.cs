@@ -26,6 +26,9 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Proj4Me.Domain.Handlers;
 using System.Reflection;
+using Proj4Me.Domain.Clientes.Repository;
+using Proj4Me.Domain.Clientes.Events;
+using Proj4Me.Domain.Clientes.Commands;
 
 namespace Proj4Me.Infra.CrossCutting.IoC
 {
@@ -57,6 +60,10 @@ namespace Proj4Me.Infra.CrossCutting.IoC
       services.AddScoped<IRequestHandler<RegistrarPerfilCommand>, PerfilCommandHandler>();
       services.AddScoped<IRequestHandler<AtualizarPerfilCommand>, PerfilCommandHandler>();
       services.AddScoped<IRequestHandler<ExcluirPerfilCommand>, PerfilCommandHandler>();
+
+      services.AddScoped<IRequestHandler<RegistrarClienteCommand>, ClienteCommandHandler>();
+      services.AddScoped<IRequestHandler<AtualizarClienteCommand>, ClienteCommandHandler>();
+      services.AddScoped<IRequestHandler<ExcluirClienteCommand>, ClienteCommandHandler>();
       /// ////////////services.AddScoped<IHandler<RegistrarClienteommand>, ClienteCommandHandler>();
 
       /// Para cada comando é dispardo um evento e o evento é resolvido pelo EventHandler
@@ -74,10 +81,15 @@ namespace Proj4Me.Infra.CrossCutting.IoC
       services.AddScoped<INotificationHandler<PerfilAtualizadoEvent>, PerfilEventHandler>();
       services.AddScoped<INotificationHandler<PerfilExcluidoEvent>, PerfilEventHandler>();
 
+      services.AddScoped<INotificationHandler<ClienteRegistradoEvent>, ClienteEventHandler>();
+      services.AddScoped<INotificationHandler<ClienteAtualizadoEvent>, ClienteEventHandler>();
+      services.AddScoped<INotificationHandler<ClienteExcluidoEvent>, ClienteEventHandler>();
+
       //Infra - Data
       services.AddScoped<IProjetoAreaServicoRepository, ProjetoAreaServicoRepository>();
       services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
       services.AddScoped<IPerfilRepository, PerfilRepository>();
+      services.AddScoped<IClienteRepository, ClienteRepository>();
       services.AddScoped<IServiceRepository, ServiceRepository>();
 
       services.AddScoped<IUnitOfWork, UnitOfWork>();

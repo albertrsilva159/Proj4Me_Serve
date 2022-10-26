@@ -27,7 +27,7 @@ namespace Proj4Me.Services.Api.ViewModels
     [Display(Name = "Descricao do projeto")]
     public string Descricao { get; set; }
     public DateTime Registro { get; private set; }
-    public string Cliente { get; set; }
+    public Guid ClienteId { get; set; }
     public Guid PerfilId { get; set; }
     [Required(ErrorMessage = "Colaborador deve ser informado")]
     public Guid ColaboradorId { get; set; }
