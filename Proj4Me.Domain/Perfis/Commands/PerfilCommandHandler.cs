@@ -11,6 +11,7 @@ using Proj4Me.Domain.ProjetosAreaServicos.Repository;
 using Proj4Me.Domain.ProjetosAreaServicos.Events;
 using System.Threading.Tasks;
 using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Proj4Me.Domain.Perfis.Commands
 {
@@ -37,7 +38,7 @@ namespace Proj4Me.Domain.Perfis.Commands
     {
       var perfil = new Perfil(message.Id, message.Nome);
 
-      if (!PerfilValido(perfil)) return (Task<Unit>)Task.CompletedTask;
+      if (!PerfilValido(perfil)) return   Task.FromResult(Unit.Value);
 
       // persistencia
       _perfilRepository.Add(perfil);
@@ -46,21 +47,21 @@ namespace Proj4Me.Domain.Perfis.Commands
       {
         //notificar um processo concluido
         Console.WriteLine("Colaborador registrado com sucesso!");
-        _mediator.PublicarEvento(new PerfilRegistradoEvent(perfil.Id, perfil.Nome));
+        Task teste = _mediator.PublicarEvento(new PerfilRegistradoEvent(perfil.Id, perfil.Nome));       
       }
 
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.FromResult(Unit.Value);
 
     }
 
     public Task<Unit> Handle(AtualizarPerfilCommand message, CancellationToken cancellationToken)
     {
       var colaboradorAtual = _perfilRepository.GetById(message.Id);
-      if (!PerfilExistente(message.Id, message.MessageType)) return (Task<Unit>)Task.CompletedTask; ;
+      if (!PerfilExistente(message.Id, message.MessageType)) return Task.FromResult(Unit.Value);
 
       var perfil = new Perfil(message.Id, message.Nome);
 
-      if (!PerfilValido(perfil)) return (Task<Unit>)Task.CompletedTask; ;
+      if (!PerfilValido(perfil)) return Task.FromResult(Unit.Value);
 
       _perfilRepository.Update(perfil);
 
@@ -68,12 +69,12 @@ namespace Proj4Me.Domain.Perfis.Commands
       {
         _mediator.PublicarEvento(new PerfilAtualizadoEvent(perfil.Id, perfil.Nome));
       }
-     return (Task<Unit>)Task.CompletedTask;
+      return Task.FromResult(Unit.Value);
     }
 
     public Task<Unit> Handle(ExcluirPerfilCommand message, CancellationToken cancellationToken)
     {
-      if (!PerfilExistente(message.Id, message.MessageType)) return (Task<Unit>)Task.CompletedTask; ;
+      if (!PerfilExistente(message.Id, message.MessageType)) return Task.FromResult(Unit.Value);
 
       _perfilRepository.Remover(message.Id);
 
@@ -81,8 +82,8 @@ namespace Proj4Me.Domain.Perfis.Commands
       {
         _mediator.PublicarEvento(new PerfilExcluidoEvent(message.Id));
       }
-      
-      return (Task<Unit>)Task.CompletedTask; ;
+
+      return Task.FromResult(Unit.Value);
     }
 
     private bool PerfilValido(Perfil perfil)

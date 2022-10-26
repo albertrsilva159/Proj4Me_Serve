@@ -97,7 +97,7 @@ namespace Proj4Me.Services.Api.Controllers
     [AllowAnonymous]
     ///[Route("projetos/filtrar-projeto/{idProjeto:guid, nome:string}")]
     [Route("projetos/pesquisar-projeto")]
-    public List<ProjetoAreaServicoViewModel> PesquisarProjetos(string? index, string? dataInicial, string? dataFinal)
+    public List<ProjetoAreaServicoViewModel> PesquisarProjetos(string? index, string? nome, string? dataInicial, string? dataFinal)
     {
 
       //var retornos = _projetoAreaServicoRepository.Get_All();

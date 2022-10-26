@@ -21,6 +21,11 @@ namespace Proj4Me.Infra.Data.Mappings
                .HasMaxLength(100)
                .HasColumnType("varchar(100)");
 
+      builder.Property(e => e.IndexColaboradorProj4Me)
+               .IsRequired()
+               .HasMaxLength(100)
+               .HasColumnType("int");
+
       builder.Ignore(e => e.CascadeMode);
       builder.Ignore(e => e.ClassLevelCascadeMode);
       builder.Ignore(e => e.RuleLevelCascadeMode);

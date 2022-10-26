@@ -10,7 +10,7 @@ using Proj4Me.Infra.Data.Context;
 namespace Proj4Me.Infra.Data.Migrations
 {
     [DbContext(typeof(ProjetoAreaServicoContext))]
-    [Migration("20220723173220_Initial")]
+    [Migration("20221023160919_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,23 @@ namespace Proj4Me.Infra.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Proj4Me.Domain.Clientes.Cliente", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("IndexClienteProj4Me")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cliente");
+                });
 
             modelBuilder.Entity("Proj4Me.Domain.Colaboradores.Colaborador", b =>
                 {
@@ -31,6 +48,9 @@ namespace Proj4Me.Infra.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
+
+                    b.Property<int>("IndexColaboradorProj4Me")
+                        .HasColumnType("int");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -48,11 +68,6 @@ namespace Proj4Me.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -69,13 +84,19 @@ namespace Proj4Me.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ClienteId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("ColaboradorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Descricao")
-                        .HasColumnType("varchar(150)");
+                    b.Property<DateTime?>("DataInicio")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("Index")
+                    b.Property<long>("Index")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("IndexProjetoProj4Me")
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
@@ -85,11 +106,9 @@ namespace Proj4Me.Infra.Data.Migrations
                     b.Property<Guid?>("PerfilId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Registro")
-                        .IsRequired()
-                        .HasColumnType("varchar(48)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
 
                     b.HasIndex("ColaboradorId");
 
@@ -98,8 +117,58 @@ namespace Proj4Me.Infra.Data.Migrations
                     b.ToTable("ProjetoAreaServico");
                 });
 
+            modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.Tarefa", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CascadeMode")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ClassLevelCascadeMode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comentario")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DataEsforco")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Index")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("NomeColaborador")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NomeTarefa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ProjetoAreaServicoId")
+                        .HasColumnType("uniqueidentifier");                    
+
+                    b.Property<int>("RuleLevelCascadeMode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TempoGastoDetalhado")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TotalTempoGasto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjetoAreaServicoId");                
+
+                    b.ToTable("Tarefa");
+                });
+
             modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", b =>
                 {
+                    b.HasOne("Proj4Me.Domain.Clientes.Cliente", "Cliente")
+                        .WithMany("ProjetoAreaServico")
+                        .HasForeignKey("ClienteId");
+
                     b.HasOne("Proj4Me.Domain.Colaboradores.Colaborador", "Colaborador")
                         .WithMany("ProjetoAreaServico")
                         .HasForeignKey("ColaboradorId");
@@ -108,9 +177,25 @@ namespace Proj4Me.Infra.Data.Migrations
                         .WithMany("ProjetoAreaServico")
                         .HasForeignKey("PerfilId");
 
+                    b.Navigation("Cliente");
+
                     b.Navigation("Colaborador");
 
                     b.Navigation("Perfil");
+                });
+
+            modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.Tarefa", b =>
+                {
+                    b.HasOne("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", null)
+                        .WithMany("ListaTarefas")
+                        .HasForeignKey("ProjetoAreaServicoId");
+
+                    b.Navigation("ProjetoAreaServico");
+                });
+
+            modelBuilder.Entity("Proj4Me.Domain.Clientes.Cliente", b =>
+                {
+                    b.Navigation("ProjetoAreaServico");
                 });
 
             modelBuilder.Entity("Proj4Me.Domain.Colaboradores.Colaborador", b =>
@@ -121,6 +206,13 @@ namespace Proj4Me.Infra.Data.Migrations
             modelBuilder.Entity("Proj4Me.Domain.Perfis.Perfil", b =>
                 {
                     b.Navigation("ProjetoAreaServico");
+                });
+
+            modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", b =>
+                {
+                    b.Navigation("ListaTarefas");
+
+                    b.Navigation("Tarefas");
                 });
 #pragma warning restore 612, 618
         }

@@ -24,13 +24,13 @@ namespace Proj4Me.Domain.Perfis
     public virtual ICollection<ProjetoAreaServico> ProjetoAreaServico { get; set; }
 
     public string Nome { get; private set; }
-    public Guid? ProjetoAreaServicoId { get; }
+    public Guid? PerfilId { get; }
 
     public override bool EhValido()
     {
       RuleFor(c => c.Nome)
                 .NotEmpty().WithMessage("O nome do perfil precisa ser fornecido")
-                .Length(2, 150).WithMessage("O Logradouro precisa ter entre 2 e 100 caracteres");
+                .Length(2, 150).WithMessage("O perfil precisa ter entre 2 e 100 caracteres");
 
       ValidationResult = Validate(this);
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Proj4Me.Domain.Clientes;
 using Proj4Me.Domain.Colaboradores;
 using Proj4Me.Domain.Perfis;
 using Proj4Me.Domain.ProjetosAreaServicos;
@@ -15,6 +16,7 @@ namespace Proj4Me.Infra.Data.Context
     //public DbSet<Cliente> Cliente { get; set; }
     public DbSet<Colaborador> Colaborador { get; set; }
     public DbSet<Perfil> Perfil { get; set; }
+    public DbSet<Cliente> Cliente { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,6 +42,11 @@ namespace Proj4Me.Infra.Data.Context
       modelBuilder.Entity<Perfil>().Ignore(c => c.ClassLevelCascadeMode);
       modelBuilder.Entity<Perfil>().Ignore(c => c.RuleLevelCascadeMode);
       modelBuilder.Entity<Perfil>().Ignore(c => c.ValidationResult);
+
+      modelBuilder.Entity<Cliente>().Ignore(c => c.CascadeMode);
+      modelBuilder.Entity<Cliente>().Ignore(c => c.ClassLevelCascadeMode);
+      modelBuilder.Entity<Cliente>().Ignore(c => c.RuleLevelCascadeMode);
+      modelBuilder.Entity<Cliente>().Ignore(c => c.ValidationResult);
 
 
       #endregion

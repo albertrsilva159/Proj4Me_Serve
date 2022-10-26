@@ -35,7 +35,7 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
     {
       //ar projeto = new ProjetoAreaServico(message.Nome,message.Descricao);
       //var cliente = new Cliente(message.Cliente.Id, message.Cliente.Nome, message.Id);
-      var projeto =  ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, string.Empty, message.ColaboradorId, message.PerfilId, null);
+      var projeto =  ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, string.Empty, message.ColaboradorId, message.PerfilId, message.ClienteId, null);
 
       if (!ProjetoAreaServicoValido(projeto)) return  Unit.Value;  //Task.FromResult(Unit.Value);
 
@@ -47,7 +47,7 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
       {
         //notificar um processo concluido
         Console.WriteLine("Evento registrado com sucesso!");
-       await  _mediator.PublicarEvento(new ProjetoAreaServicoRegistradoEvent(projeto.Id, projeto.Nome, projeto.Descricao));
+       await  _mediator.PublicarEvento(new ProjetoAreaServicoRegistradoEvent(projeto.Id, projeto.Nome));
       }
 
       return  Unit.Value; ///Task.FromResult("ok");// (Task<Unit>)Task.CompletedTask; ///Task.FromResult(Unit.Value);
@@ -59,7 +59,7 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
       var eventoAtual = _projetoAreaServicoRepository.GetById(message.Id);
       if (!EventoExistente(message.Id, message.MessageType)) return Unit.Value;// Task.FromResult(Unit.Value);
 
-      var projeto = ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, string.Empty, message.ColaboradorId, eventoAtual.PerfilId, null);
+      var projeto = ProjetoAreaServico.ProjetoAreaServicoFactory.NovoProjetoAreaServicoCompleto(message.Id, message.Nome, message.Descricao, string.Empty, message.ColaboradorId, eventoAtual.PerfilId, message.ClienteId, null);
                                                                                       
       if (!ProjetoAreaServicoValido(projeto)) return Unit.Value; //Task.FromResult(Unit.Value);
 
@@ -67,7 +67,7 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
 
       if (Commit())
       {
-        await _mediator.PublicarEvento((new ProjetoAreaServicoAtualizadoEvent(projeto.Id, projeto.Nome, projeto.Descricao)));
+        await _mediator.PublicarEvento((new ProjetoAreaServicoAtualizadoEvent(projeto.Id, projeto.Nome)));
       }
 
       return Unit.Value; //Task.FromResult(Unit.Value);

@@ -10,6 +10,6 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
     public string Descricao { get; protected set; }
     public Guid ColaboradorId { get; protected set; }
     public Guid PerfilId { get; protected set; }
-    //public Guid ClienteId { get; protected set; }
+    public Guid ClienteId { get; protected set; }
   }
 }

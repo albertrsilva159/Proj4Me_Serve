@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Proj4Me.Domain.ProjetosAreaServicos;
 using Proj4Me.Infra.Data.Extensions;
+using System.Numerics;
 using System.Reflection.Emit;
 
 namespace Proj4Me.Infra.Data.Mappings
@@ -14,11 +15,10 @@ namespace Proj4Me.Infra.Data.Mappings
         .HasColumnType("varchar(150)")
         .IsRequired();
 
-      builder.Property(e => e.Descricao)
-       .HasColumnType("varchar(150)");
+      builder.Property(e => e.IndexProjetoProj4Me)
+       .HasColumnType("int")
+       .IsRequired();
 
-      builder.Property(e => e.Registro)
-       .HasColumnType("varchar");
 
       builder.Ignore(e => e.CascadeMode);
       builder.Ignore(e => e.ClassLevelCascadeMode);
@@ -35,6 +35,10 @@ namespace Proj4Me.Infra.Data.Mappings
       builder.HasOne(c => c.Perfil)
         .WithMany(p => p.ProjetoAreaServico)
         .HasForeignKey(c => c.PerfilId);
+
+      builder.HasOne(c => c.Cliente)
+        .WithMany(p => p.ProjetoAreaServico)
+        .HasForeignKey(c => c.ClienteId);
 
       builder.HasMany(p => p.Tarefas)
         .WithOne(c => c.ProjetoAreaServico);

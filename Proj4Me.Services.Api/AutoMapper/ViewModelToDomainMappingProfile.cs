@@ -24,7 +24,7 @@ namespace Proj4Me.Services.Api.AutoMapper
       //.ForMember(dest => dest.ListaTarefas, opt => opt.MapFrom(src => src.ListaTarefas.Where(x => x.NomeTarefa != null)));
 
       CreateMap<ProjetoAreaServicoViewModel, RegistrarProjetoAreaServicoCommand>()
-    .ConstructUsing(c => new RegistrarProjetoAreaServicoCommand(c.Nome, c.Descricao, c.ColaboradorId, c.PerfilId));//id aqui é do projeto
+    .ConstructUsing(c => new RegistrarProjetoAreaServicoCommand(c.Nome, c.Descricao, c.ColaboradorId, c.PerfilId, c.ClienteId));//id aqui é do projeto
 
       //CreateMap<ClienteViewModel, IncluirClienteProjetoAreaServicoCommand>()
       //          .ConstructUsing(c => new IncluirClienteProjetoAreaServicoCommand(Guid.NewGuid(), c.Nome, c.Id));

@@ -21,11 +21,11 @@ namespace Proj4Me.Domain.ProjetosAreaServicos.Commands
     /// <param name="descricaoLonga"></param>
     /// <param name="cliente"></param>
     /// <param name="colaboradorId"></param>
-    public RegistrarProjetoAreaServicoCommand(string nome, string descricao, Guid colaboradorId, Guid perfilId)
+    public RegistrarProjetoAreaServicoCommand(string nome, string descricao, Guid colaboradorId, Guid perfilId, Guid clienteId)
     {
       Nome = nome;
       Descricao = descricao;
-      //ClienteId = clienteId;
+      ClienteId = clienteId;
       PerfilId = perfilId;
       ColaboradorId = colaboradorId;
       //Cliente = cliente;

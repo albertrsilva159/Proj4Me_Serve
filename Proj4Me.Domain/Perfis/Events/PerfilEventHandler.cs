@@ -26,7 +26,7 @@ namespace Proj4Me.Domain.Perfis.Events
     public Task Handle(PerfilRegistradoEvent message, CancellationToken cancellationToken)
     {
       // TODO: Disparar alguma ação
-      return (Task<Unit>)Task.CompletedTask;
+      return Task.CompletedTask;
     }
   }
 }
