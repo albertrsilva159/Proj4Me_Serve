@@ -28,17 +28,17 @@ namespace Proj4Me.Infra.Data.Mappings
       builder.ToTable("ProjetoAreaServico");
 
       //relacionamento um projeto pode ter um colaborador, mas um colaborador pode ter varios projetos
-      builder.HasOne(c => c.Colaborador)
-        .WithMany(p => p.ProjetoAreaServico)
-        .HasForeignKey(c => c.ColaboradorId);
+      //builder.HasOne(c => c.Colaborador)
+      //  .WithMany(p => p.ProjetoAreaServico)
+      //  .HasForeignKey(c => c.ColaboradorId);  
+
 
       builder.HasOne(c => c.Perfil)
         .WithMany(p => p.ProjetoAreaServico)
         .HasForeignKey(c => c.PerfilId);
 
-      builder.HasOne(c => c.Cliente)
-        .WithMany(p => p.ProjetoAreaServico)
-        .HasForeignKey(c => c.ClienteId);
+      builder.HasMany(c => c.Clientes)
+        .WithOne(c => c.ProjetoAreaServico);
 
       builder.HasMany(p => p.Tarefas)
         .WithOne(c => c.ProjetoAreaServico);

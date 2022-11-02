@@ -25,6 +25,8 @@ namespace Proj4Me.Infra.Data.Mappings
 
       //nomeando tabela
       builder.ToTable("Cliente");
+
+
     }
   }
 }

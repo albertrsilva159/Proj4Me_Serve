@@ -6,6 +6,7 @@ using Proj4Me.Domain.Perfis;
 using System.Collections.Generic;
 using System.Linq;
 using Proj4Me.Domain.Clientes;
+using System.Numerics;
 
 namespace Proj4Me.Domain.ProjetosAreaServicos
 {
@@ -25,7 +26,7 @@ namespace Proj4Me.Domain.ProjetosAreaServicos
     // por ele ser privado entao so a classe interna NovoProjetoAreaServicoCompleto tem acesso a esse contrutor
     private ProjetoAreaServico() { }
 
-    public long Index { get; private set; }
+    public int Index { get; private set; }
     public string Nome { get; private set; }
     //public string Descricao { get; private set; }
 
@@ -36,7 +37,7 @@ namespace Proj4Me.Domain.ProjetosAreaServicos
     public Guid? ClienteId { get; private set; }
     public DateTime? DataInicio { get; private set; }
     public int IndexProjetoProj4Me { get; private set; }
-    public List<Tarefa> ListaTarefas { get; set; } 
+    //public List<Tarefa> ListaTarefas { get; set; } 
 
 
     // public virtual List<Tarefa> ListaTarefasProjeto { get; private set; }
@@ -44,9 +45,10 @@ namespace Proj4Me.Domain.ProjetosAreaServicos
     //talvez trocar para nao aceitar nulo
     // EF propriedades de navegacao
     public virtual Perfil Perfil { get; private set; }
-    public virtual Colaborador Colaborador { get; private set; }
-    public virtual Cliente Cliente { get; private set; }
+    public virtual ICollection<ProjetoAreaServicoColaborador> ProjetosAreaServicoColaboradores { get; private set; }
+    //public virtual Cliente Cliente { get; private set; }
     public ICollection<Tarefa> Tarefas { get; set; }
+    public virtual ICollection<Cliente> Clientes { get; set; }
 
 
     public override bool EhValido()
@@ -62,11 +64,13 @@ namespace Proj4Me.Domain.ProjetosAreaServicos
     //}
 
     //Fazend dessa forma caso precise alterar o colaborador do projeto
-    public void AtribuirColaborador(Colaborador colaborador)
-    {
-      if (!colaborador.EhValido()) return;
-      Colaborador = colaborador;
-    }
+
+    //aqui
+    //public void AtribuirColaborador(Colaborador colaborador)
+    //{
+    //  if (!colaborador.EhValido()) return;
+    //  Colaborador = colaborador;
+    //}
 
     public void AtribuirPerfil(Perfil perfil)
     {
@@ -139,7 +143,7 @@ namespace Proj4Me.Domain.ProjetosAreaServicos
         return projetoAreaServico;
       }
 
-      public static ProjetoAreaServico NovoProjetoAreaServicoBasico(string nome, long index, List<Tarefa> tarefas)
+      public static ProjetoAreaServico NovoProjetoAreaServicoBasico(string nome, int index, List<Tarefa> tarefas)
       {
         var projetoAreaServico = new ProjetoAreaServico()
         {

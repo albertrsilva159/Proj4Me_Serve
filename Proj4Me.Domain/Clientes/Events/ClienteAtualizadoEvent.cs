@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Numerics;
 
 namespace Proj4Me.Domain.Clientes.Events
 {
   public class ClienteAtualizadoEvent : BaseClienteEvent
   {
-    public ClienteAtualizadoEvent(Guid id, string nome, long indexCliente)
+    public ClienteAtualizadoEvent(Guid id, string nome, int indexCliente)
     {
       Id = id;
       Nome = nome;

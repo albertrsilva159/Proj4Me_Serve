@@ -15,18 +15,33 @@ namespace Proj4Me.Infra.Data.Context
     public DbSet<ProjetoAreaServico> ProjetoAreaServico { get; set; }
     //public DbSet<Cliente> Cliente { get; set; }
     public DbSet<Colaborador> Colaborador { get; set; }
+    public DbSet<ProjetoAreaServicoColaborador> ProjetosAreaServicoColaboradores { get; set; }
     public DbSet<Perfil> Perfil { get; set; }
     public DbSet<Cliente> Cliente { get; set; }
+    public DbSet<Tarefa> Tarefa { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       #region FLuentAPI
       // o AddConfiguration foi o metodo da extensao model builder 
       modelBuilder.AddConfiguration(new ProjetoAreaServicoMapping());
-      //modelBuilder.AddConfiguration(new ClienteMapping());
+      modelBuilder.AddConfiguration(new ClienteMapping());
       modelBuilder.AddConfiguration(new ColaboradorMapping());
       modelBuilder.AddConfiguration(new PerfilMapping());
+      modelBuilder.AddConfiguration(new ProjetoAreaServicoColaboradorMapping());
+      modelBuilder.AddConfiguration(new TarefaMapping());
 
+      modelBuilder.Entity<ProjetoAreaServicoColaborador>().HasKey(x => new { x.ColaboradorId, x.ProjetoAreaServicoId });
+
+      //modelBuilder.Entity<ProjetoAreaServicoColaborador>()
+      //   .HasOne(bc => bc.Colaborador)
+      //    .WithMany(b => b.ProjetosAreaServicoColaboradores)
+      //     .HasForeignKey(bc => bc.ColaboradorId);
+
+      //modelBuilder.Entity<ProjetoAreaServicoColaborador>()
+      //    .HasOne(bc => bc.ProjetoAreaServico)
+      //    .WithMany(c => c.ProjetosAreaServicoColaboradores)
+      //     .HasForeignKey(bc => bc.ProjetoAreaServicoId);
 
       modelBuilder.Entity<ProjetoAreaServico>().Ignore(c => c.CascadeMode);
       modelBuilder.Entity<ProjetoAreaServico>().Ignore(c => c.ClassLevelCascadeMode);
@@ -36,7 +51,7 @@ namespace Proj4Me.Infra.Data.Context
       modelBuilder.Entity<Colaborador>().Ignore(c => c.CascadeMode);
       modelBuilder.Entity<Colaborador>().Ignore(c => c.ClassLevelCascadeMode);
       modelBuilder.Entity<Colaborador>().Ignore(c => c.RuleLevelCascadeMode);
-      modelBuilder.Entity<Colaborador>().Ignore(c => c.ValidationResult);
+      modelBuilder.Entity<Colaborador>().Ignore(c => c.ValidationResult);          
 
       modelBuilder.Entity<Perfil>().Ignore(c => c.CascadeMode);
       modelBuilder.Entity<Perfil>().Ignore(c => c.ClassLevelCascadeMode);
@@ -47,6 +62,11 @@ namespace Proj4Me.Infra.Data.Context
       modelBuilder.Entity<Cliente>().Ignore(c => c.ClassLevelCascadeMode);
       modelBuilder.Entity<Cliente>().Ignore(c => c.RuleLevelCascadeMode);
       modelBuilder.Entity<Cliente>().Ignore(c => c.ValidationResult);
+
+      modelBuilder.Entity<Tarefa>().Ignore(c => c.CascadeMode);
+      modelBuilder.Entity<Tarefa>().Ignore(c => c.ClassLevelCascadeMode);
+      modelBuilder.Entity<Tarefa>().Ignore(c => c.RuleLevelCascadeMode);
+      modelBuilder.Entity<Tarefa>().Ignore(c => c.ValidationResult);
 
 
       #endregion

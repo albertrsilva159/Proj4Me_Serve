@@ -3,6 +3,7 @@ using Proj4Me.Domain.Core.Models;
 using Proj4Me.Domain.ProjetosAreaServicos;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Proj4Me.Domain.Colaboradores
 {
@@ -19,7 +20,7 @@ namespace Proj4Me.Domain.Colaboradores
     public Colaborador() { }
 
     //EF Propriedade de navegação onde um colaborador pode ter varios projetos por isso a coleção
-    public virtual ICollection<ProjetoAreaServico> ProjetoAreaServico { get; set; } 
+    public virtual ICollection<ProjetoAreaServicoColaborador> ProjetosAreaServicoColaboradores { get; set; } 
 
     public string Nome { get;   set; }
     public string Email { get;  set; }
