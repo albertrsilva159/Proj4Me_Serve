@@ -8,26 +8,13 @@ namespace Proj4Me.Infra.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cliente",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IndexClienteProj4Me = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cliente", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Colaborador",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nome = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false),
                     Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    IndexColaboradorProj4Me = table.Column<int>(type: "int", nullable: false)
+                    IndexColaboradorProj4Me = table.Column<int>(type: "int", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,7 +38,7 @@ namespace Proj4Me.Infra.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Index = table.Column<long>(type: "bigint", nullable: false),
+                    Index = table.Column<int>(type: "int", nullable: false),
                     Nome = table.Column<string>(type: "varchar(150)", nullable: false),
                     PerfilId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ColaboradorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -63,18 +50,6 @@ namespace Proj4Me.Infra.Data.Migrations
                 {
                     table.PrimaryKey("PK_ProjetoAreaServico", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjetoAreaServico_Cliente_ClienteId",
-                        column: x => x.ClienteId,
-                        principalTable: "Cliente",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ProjetoAreaServico_Colaborador_ColaboradorId",
-                        column: x => x.ColaboradorId,
-                        principalTable: "Colaborador",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_ProjetoAreaServico_Perfil_PerfilId",
                         column: x => x.PerfilId,
                         principalTable: "Perfil",
@@ -83,22 +58,63 @@ namespace Proj4Me.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cliente",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProjetoAreaServicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Nome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    IndexClienteProj4Me = table.Column<int>(type: "int", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cliente", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cliente_ProjetoAreaServico_ProjetoAreaServicoId",
+                        column: x => x.ProjetoAreaServicoId,
+                        principalTable: "ProjetoAreaServico",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjetoAreaServicoColaborador",
+                columns: table => new
+                {
+                    ProjetoAreaServicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ColaboradorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjetoAreaServicoColaborador", x => new { x.ColaboradorId, x.ProjetoAreaServicoId });
+                    table.ForeignKey(
+                        name: "FK_ProjetoAreaServicoColaborador_Colaborador_ColaboradorId",
+                        column: x => x.ColaboradorId,
+                        principalTable: "Colaborador",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjetoAreaServicoColaborador_ProjetoAreaServico_ProjetoAreaServicoId",
+                        column: x => x.ProjetoAreaServicoId,
+                        principalTable: "ProjetoAreaServico",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tarefa",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Index = table.Column<long>(type: "bigint", nullable: false),
-                    NomeTarefa = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DataEsforco = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    NomeColaborador = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TempoGastoDetalhado = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TotalTempoGasto = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProjetoAreaServicoId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ProjetoAreaServicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CascadeMode = table.Column<int>(type: "int", nullable: false),
-                    ClassLevelCascadeMode = table.Column<int>(type: "int", nullable: false),
-                    RuleLevelCascadeMode = table.Column<int>(type: "int", nullable: false)
+                    IndexTarefaProj4Me = table.Column<int>(type: "int", nullable: false),
+                    NomeTarefa = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false),
+                    DataEsforco = table.Column<DateTime>(type: "DateTime", nullable: false),
+                    NomeColaborador = table.Column<string>(type: "varchar(300)", nullable: true),
+                    Comentario = table.Column<string>(type: "varchar(5000)", nullable: false),
+                    TempoGastoDetalhado = table.Column<string>(type: "varchar(100)", nullable: false),
+                    TotalTempoGasto = table.Column<string>(type: "varchar(100)", nullable: false),
+                    IndexProjetoProj4Me = table.Column<int>(type: "int", nullable: false),
+                    ProjetoAreaServicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -109,23 +125,12 @@ namespace Proj4Me.Infra.Data.Migrations
                         principalTable: "ProjetoAreaServico",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Tarefa_ProjetoAreaServico_ProjetoAreaServicoId1",
-                        column: x => x.ProjetoAreaServicoId1,
-                        principalTable: "ProjetoAreaServico",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjetoAreaServico_ClienteId",
-                table: "ProjetoAreaServico",
-                column: "ClienteId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjetoAreaServico_ColaboradorId",
-                table: "ProjetoAreaServico",
-                column: "ColaboradorId");
+                name: "IX_Cliente_ProjetoAreaServicoId",
+                table: "Cliente",
+                column: "ProjetoAreaServicoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjetoAreaServico_PerfilId",
@@ -133,29 +138,32 @@ namespace Proj4Me.Infra.Data.Migrations
                 column: "PerfilId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tarefa_ProjetoAreaServicoId",
-                table: "Tarefa",
+                name: "IX_ProjetoAreaServicoColaborador_ProjetoAreaServicoId",
+                table: "ProjetoAreaServicoColaborador",
                 column: "ProjetoAreaServicoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tarefa_ProjetoAreaServicoId1",
+                name: "IX_Tarefa_ProjetoAreaServicoId",
                 table: "Tarefa",
-                column: "ProjetoAreaServicoId1");
+                column: "ProjetoAreaServicoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Tarefa");
-
-            migrationBuilder.DropTable(
-                name: "ProjetoAreaServico");
-
-            migrationBuilder.DropTable(
                 name: "Cliente");
 
             migrationBuilder.DropTable(
+                name: "ProjetoAreaServicoColaborador");
+
+            migrationBuilder.DropTable(
+                name: "Tarefa");
+
+            migrationBuilder.DropTable(
                 name: "Colaborador");
+
+            migrationBuilder.DropTable(
+                name: "ProjetoAreaServico");
 
             migrationBuilder.DropTable(
                 name: "Perfil");

@@ -1,5 +1,6 @@
 ﻿using Proj4Me.Domain.Clientes.Events;
 using System;
+using System.Numerics;
 
 namespace Proj4Me.Domain.Clientes.Events
 {
@@ -7,7 +8,7 @@ namespace Proj4Me.Domain.Clientes.Events
   {
 
 
-    public ClienteRegistradoEvent(Guid id, string nome, long indexCliente)
+    public ClienteRegistradoEvent(Guid id, string nome, int indexCliente)
     {
       Id = id;
       Nome = nome;

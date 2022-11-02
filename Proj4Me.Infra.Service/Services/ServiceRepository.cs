@@ -70,7 +70,7 @@ namespace Proj4Me.Infra.Service.Services
 
         HttpResponseMessage resp = client.SendAsync(req).Result;
         var result = resp.Content.ReadAsStringAsync();
-
+        var teste = result.Result;
         listaPorProjetos = JsonConvert.DeserializeObject<List<ProjetoProj4Me>>(result.Result) as List<ProjetoProj4Me>;
         //var testee = convert.Where(x => x.index < 3);
       }

@@ -6,7 +6,7 @@ using Proj4Me.Infra.Data.Extensions;
 
 namespace Proj4Me.Infra.Data.Mappings
 {
-  public  class TarefaMapping : EntityTypeConfiguration<Tarefa>
+  public class TarefaMapping : EntityTypeConfiguration<Tarefa>
   {
 
     public override void Map(EntityTypeBuilder<Tarefa> builder)
@@ -15,6 +15,33 @@ namespace Proj4Me.Infra.Data.Mappings
                .IsRequired()
                .HasMaxLength(300)
                .HasColumnType("varchar(300)");
+
+      builder.Property(e => e.IndexTarefaProj4Me)
+               .IsRequired()
+               .HasColumnType("int");
+
+      builder.Property(e => e.DataEsforco)
+           .IsRequired()
+           .HasColumnType("DateTime");
+
+      builder.Property(e => e.NomeColaborador)
+            .HasColumnType("varchar(300)");
+
+      builder.Property(e => e.Comentario)
+            .IsRequired()
+            .HasColumnType("varchar(5000)");
+
+      builder.Property(e => e.TotalTempoGasto)
+            .IsRequired()
+            .HasColumnType("varchar(100)");
+
+      builder.Property(e => e.TempoGastoDetalhado)
+            .IsRequired()
+            .HasColumnType("varchar(100)");
+
+      builder.Property(e => e.IndexProjetoProj4Me)
+            .IsRequired()
+            .HasColumnType("int");
 
 
       builder.Ignore(e => e.CascadeMode);

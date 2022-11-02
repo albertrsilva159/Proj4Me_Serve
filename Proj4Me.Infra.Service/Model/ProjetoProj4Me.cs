@@ -10,7 +10,7 @@ namespace Proj4Me.Infra.Service.Model
   public partial class ProjetoProj4Me
   {
     [JsonProperty("index")]
-    public long Index { get; set; }
+    public int Index { get; set; }
 
     [JsonProperty("title")]
     public string NomeProjeto { get; set; }
@@ -55,10 +55,10 @@ namespace Proj4Me.Infra.Service.Model
   public partial class CustomField
   {
     [JsonProperty("id")]
-    public long Id { get; set; }
+    public int Id { get; set; }
 
     [JsonProperty("customFieldID")]
-    public long CustomFieldId { get; set; }
+    public int CustomFieldId { get; set; }
 
     [JsonProperty("value")]
     public object Value { get; set; }

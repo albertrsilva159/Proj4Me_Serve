@@ -3,6 +3,7 @@ using Proj4Me.Domain.Core.Models;
 using Proj4Me.Domain.ProjetosAreaServicos;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Proj4Me.Domain.Clientes
 {
@@ -19,7 +20,8 @@ namespace Proj4Me.Domain.Clientes
     public Cliente() { }
 
     //EF Propriedade de navegação onde um cliente pode ter varios projetos por isso a coleção
-    public virtual ICollection<ProjetoAreaServico> ProjetoAreaServico { get; set; } 
+    //public virtual ICollection<ProjetoAreaServico> ProjetoAreaServico { get; set; } 
+    public virtual ProjetoAreaServico ProjetoAreaServico { get; set; }
 
     public string Nome { get;  set; }
     public int IndexClienteProj4Me { get;  set; }

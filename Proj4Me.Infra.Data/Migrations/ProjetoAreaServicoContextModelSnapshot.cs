@@ -26,12 +26,20 @@ namespace Proj4Me.Infra.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("IndexClienteProj4Me")
+                        .HasMaxLength(100)
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid?>("ProjetoAreaServicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjetoAreaServicoId");
 
                     b.ToTable("Cliente");
                 });
@@ -48,6 +56,7 @@ namespace Proj4Me.Infra.Data.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<int>("IndexColaboradorProj4Me")
+                        .HasMaxLength(100)
                         .HasColumnType("int");
 
                     b.Property<string>("Nome")
@@ -91,8 +100,8 @@ namespace Proj4Me.Infra.Data.Migrations
                     b.Property<DateTime?>("DataInicio")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("Index")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
 
                     b.Property<int>("IndexProjetoProj4Me")
                         .HasColumnType("int");
@@ -106,13 +115,24 @@ namespace Proj4Me.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
-
-                    b.HasIndex("ColaboradorId");
-
                     b.HasIndex("PerfilId");
 
                     b.ToTable("ProjetoAreaServico");
+                });
+
+            modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServicoColaborador", b =>
+                {
+                    b.Property<Guid>("ColaboradorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProjetoAreaServicoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ColaboradorId", "ProjetoAreaServicoId");
+
+                    b.HasIndex("ProjetoAreaServicoId");
+
+                    b.ToTable("ProjetoAreaServicoColaborador");
                 });
 
             modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.Tarefa", b =>
@@ -121,93 +141,95 @@ namespace Proj4Me.Infra.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CascadeMode")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClassLevelCascadeMode")
-                        .HasColumnType("int");
-
                     b.Property<string>("Comentario")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("varchar(5000)");
 
                     b.Property<DateTime?>("DataEsforco")
-                        .HasColumnType("datetime2");
+                        .IsRequired()
+                        .HasColumnType("DateTime");
 
-                    b.Property<long>("Index")
-                        .HasColumnType("bigint");
+                    b.Property<int>("IndexProjetoProj4Me")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IndexTarefaProj4Me")
+                        .HasColumnType("int");
 
                     b.Property<string>("NomeColaborador")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("NomeTarefa")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
 
                     b.Property<Guid?>("ProjetoAreaServicoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ProjetoAreaServicoId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("RuleLevelCascadeMode")
-                        .HasColumnType("int");
-
                     b.Property<string>("TempoGastoDetalhado")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("TotalTempoGasto")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjetoAreaServicoId");
 
-                    b.HasIndex("ProjetoAreaServicoId1");
-
                     b.ToTable("Tarefa");
-                });
-
-            modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", b =>
-                {
-                    b.HasOne("Proj4Me.Domain.Clientes.Cliente", "Cliente")
-                        .WithMany("ProjetoAreaServico")
-                        .HasForeignKey("ClienteId");
-
-                    b.HasOne("Proj4Me.Domain.Colaboradores.Colaborador", "Colaborador")
-                        .WithMany("ProjetoAreaServico")
-                        .HasForeignKey("ColaboradorId");
-
-                    b.HasOne("Proj4Me.Domain.Perfis.Perfil", "Perfil")
-                        .WithMany("ProjetoAreaServico")
-                        .HasForeignKey("PerfilId");
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("Colaborador");
-
-                    b.Navigation("Perfil");
-                });
-
-            modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.Tarefa", b =>
-                {
-                    b.HasOne("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", null)
-                        .WithMany("ListaTarefas")
-                        .HasForeignKey("ProjetoAreaServicoId");
-
-                    b.HasOne("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", "ProjetoAreaServico")
-                        .WithMany("Tarefas")
-                        .HasForeignKey("ProjetoAreaServicoId1");
-
-                    b.Navigation("ProjetoAreaServico");
                 });
 
             modelBuilder.Entity("Proj4Me.Domain.Clientes.Cliente", b =>
                 {
+                    b.HasOne("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", "ProjetoAreaServico")
+                        .WithMany("Clientes")
+                        .HasForeignKey("ProjetoAreaServicoId");
+
+                    b.Navigation("ProjetoAreaServico");
+                });
+
+            modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", b =>
+                {
+                    b.HasOne("Proj4Me.Domain.Perfis.Perfil", "Perfil")
+                        .WithMany("ProjetoAreaServico")
+                        .HasForeignKey("PerfilId");
+
+                    b.Navigation("Perfil");
+                });
+
+            modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServicoColaborador", b =>
+                {
+                    b.HasOne("Proj4Me.Domain.Colaboradores.Colaborador", "Colaborador")
+                        .WithMany("ProjetosAreaServicoColaboradores")
+                        .HasForeignKey("ColaboradorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", "ProjetoAreaServico")
+                        .WithMany("ProjetosAreaServicoColaboradores")
+                        .HasForeignKey("ProjetoAreaServicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Colaborador");
+
+                    b.Navigation("ProjetoAreaServico");
+                });
+
+            modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.Tarefa", b =>
+                {
+                    b.HasOne("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", "ProjetoAreaServico")
+                        .WithMany("Tarefas")
+                        .HasForeignKey("ProjetoAreaServicoId");
+
                     b.Navigation("ProjetoAreaServico");
                 });
 
             modelBuilder.Entity("Proj4Me.Domain.Colaboradores.Colaborador", b =>
                 {
-                    b.Navigation("ProjetoAreaServico");
+                    b.Navigation("ProjetosAreaServicoColaboradores");
                 });
 
             modelBuilder.Entity("Proj4Me.Domain.Perfis.Perfil", b =>
@@ -217,7 +239,9 @@ namespace Proj4Me.Infra.Data.Migrations
 
             modelBuilder.Entity("Proj4Me.Domain.ProjetosAreaServicos.ProjetoAreaServico", b =>
                 {
-                    b.Navigation("ListaTarefas");
+                    b.Navigation("Clientes");
+
+                    b.Navigation("ProjetosAreaServicoColaboradores");
 
                     b.Navigation("Tarefas");
                 });
